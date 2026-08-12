@@ -1,0 +1,1630 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>政策文本路由初步实验报告</title>
+<style>
+:root { --ink:#152a38; --muted:#667884; --line:#dbe5ea; --paper:#ffffff; --soft:#f4f8fa;
+  --navy:#174866; --teal:#0f7c78; --amber:#d98720; --green:#297a52; --purple:#7657a6; }
+* { box-sizing:border-box; }
+body { margin:0; background:#eef3f6; color:var(--ink); font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif; }
+.report { max-width:1420px; margin:28px auto; background:var(--paper); padding:46px 56px 64px; box-shadow:0 10px 34px rgba(25,54,70,.08); }
+h1 { margin:0; font-size:34px; font-weight:600; letter-spacing:.02em; }
+.subtitle { margin-top:9px; color:var(--muted); font-size:16px; }
+.lead { margin:28px 0 0; padding:18px 22px; border-left:5px solid var(--teal); background:var(--soft); font-size:17px; line-height:1.8; }
+h2 { margin:46px 0 18px; padding-bottom:10px; border-bottom:2px solid var(--ink); font-size:24px; }
+h3 { margin:28px 0 12px; font-size:18px; }
+p, li { line-height:1.75; }
+.metrics { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-top:22px; }
+.metric { border-top:3px solid var(--navy); background:var(--soft); padding:15px 16px; }
+.metric b { display:block; font-size:25px; margin-bottom:4px; }
+.metric span { color:var(--muted); font-size:13px; }
+.flow-wrap { overflow-x:auto; padding:4px 0 12px; }
+.flow { min-width:1220px; display:grid; grid-template-columns:260px 48px 320px 48px 320px 48px 165px; align-items:center; }
+.flow-card { min-height:310px; border:1px solid var(--line); padding:18px; background:#fff; }
+.flow-card .step { color:var(--teal); font-weight:600; font-size:13px; letter-spacing:.08em; }
+.flow-card h3 { margin:8px 0 12px; font-size:18px; }
+.flow-card p { font-size:13px; line-height:1.65; margin:7px 0; }
+.news-card { border-top:5px solid var(--navy); }
+.measure-card { border-top:5px solid var(--amber); }
+.route-card { border-top:5px solid var(--green); }
+.output-card { border-top:5px solid var(--purple); }
+.arrow { text-align:center; font-size:30px; color:#8ba0ac; }
+.mini { border:1px solid var(--line); background:var(--soft); padding:10px; margin:9px 0; }
+.mini b { display:block; margin-bottom:4px; font-size:13px; }
+.evidence { color:var(--muted); font-size:12px !important; }
+.route-tag { display:inline-block; margin:2px 4px 2px 0; padding:3px 8px; border-radius:11px; font-size:12px; font-weight:600; }
+.all-a { color:#174866; background:#dcecf4; } .style { color:#70451a; background:#f8e8c9; }
+.industry { color:#1d6745; background:#dcefe5; } .none { color:#68737a; background:#e9eef1; }
+.route-legend { display:flex; gap:16px; flex-wrap:wrap; margin:10px 0 2px; }
+.simple-table { width:100%; border-collapse:collapse; }
+.simple-table th,.simple-table td { border-bottom:1px solid var(--line); padding:10px 12px; text-align:left; vertical-align:top; }
+.simple-table th { background:var(--soft); font-weight:600; }
+.result-grid { display:grid; grid-template-columns:1fr 1fr; gap:28px; }
+.bar-row { display:grid; grid-template-columns:80px 1fr 44px; gap:10px; align-items:center; margin:10px 0; }
+.bar { height:14px; background:#e8eef1; } .bar i { display:block; height:100%; background:var(--teal); }
+.checks { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.check { padding:12px 14px; background:var(--soft); border-left:3px solid var(--green); font-size:14px; }
+.table-note { color:var(--muted); font-size:13px; margin:0 0 10px; }
+.policy-table-wrap { overflow-x:auto; border:1px solid var(--line); max-height:720px; overflow-y:auto; }
+.policy-table { border-collapse:separate; border-spacing:0; min-width:2550px; width:100%; font-size:13px; }
+.policy-table th,.policy-table td { padding:10px 11px; border-right:1px solid #edf1f3; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.55; background:#fff; }
+.policy-table th { position:sticky; top:0; z-index:3; background:var(--navy); color:#fff; text-align:left; white-space:nowrap; }
+.policy-table td:nth-child(1),.policy-table th:nth-child(1) { position:sticky; left:0; z-index:2; width:52px; min-width:52px; background:#f7fafb; }
+.policy-table th:nth-child(1) { z-index:4; background:var(--navy); }
+.policy-table td:nth-child(4),.policy-table th:nth-child(4) { min-width:310px; }
+.policy-table td:nth-child(6) { min-width:300px; } .policy-table td:nth-child(7) { min-width:280px; }
+.policy-table td:nth-child(12) { min-width:440px; }
+.policy-table a { color:var(--navy); text-decoration:none; }
+.nowrap { white-space:nowrap; } .num { text-align:right; font-variant-numeric:tabular-nums; }
+.judgement { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+.judgement article { padding:16px; background:var(--soft); }
+.judgement h3 { margin-top:0; }
+.foot { color:var(--muted); font-size:13px; margin-top:38px; padding-top:16px; border-top:1px solid var(--line); }
+@media (max-width:900px) { .report{margin:0;padding:28px 20px} .metrics{grid-template-columns:repeat(2,1fr)} .result-grid,.judgement{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<main class="report">
+  <h1>政策文本路由初步实验报告</h1>
+  <div class="subtitle">50条真实政策新闻 · measure拆分 · 全A / 风格 / 行业路由</div>
+  <div class="lead"><b>结论先行：</b>原型已经完整跑通，可以进入人工标注。50条新闻拆成105条独立政策措施，全部保留可回查原文证据；自动检查无缺失、无结构冲突。当前结果是人工标注前的 baseline，不是模型准确率。</div>
+  <section class="metrics">
+    <div class="metric"><b>50</b><span>政策新闻</span></div>
+    <div class="metric"><b>105</b><span>独立 measure</span></div>
+    <div class="metric"><b>9 / 5 / 82</b><span>全A / 风格 / 行业正标签</span></div>
+    <div class="metric"><b>100%</b><span>evidence 原文命中</span></div>
+    <div class="metric"><b>¥0.33</b><span>筛选 + 正式运行估算成本</span></div>
+  </section>
+
+  <h2>一、一张图看清整个实验</h2>
+  <div id="flowchart" class="flow-wrap">
+    <div class="flow" role="img" aria-label="从新闻到measure拆分，再到全A风格行业路由和结构化结果的流程图">
+      <article class="flow-card news-card">
+        <div class="step">INPUT</div><h3>一条政策新闻</h3>
+        <p><b>中共中央政治局会议：</b>深化资本市场投融资综合改革，提升资本市场韧性和信心</p>
+        <p class="evidence">原文同时包含：一揽子化债、地方中小金融机构改革化险、资本市场投融资改革。</p>
+      </article>
+      <div class="arrow">→</div>
+      <article class="flow-card measure-card">
+        <div class="step">STEP 1</div><h3>拆成独立 measure</h3>
+        <div class="mini"><b>M001 · 化债与金融风险处置</b><p>对象：房地产、地方中小金融机构</p><p class="evidence">证据：“实施好一揽子化债方案……”</p></div>
+        <div class="mini"><b>M002 · 资本市场投融资改革</b><p>对象：资本市场</p><p class="evidence">证据：“深化资本市场投融资综合改革……”</p></div>
+      </article>
+      <div class="arrow">→</div>
+      <article class="flow-card route-card">
+        <div class="step">STEP 2</div><h3>每条 measure 单独路由</h3>
+        <div class="mini"><b>M001</b><span class="route-tag all-a">全A</span><span class="route-tag style">风格</span><span class="route-tag industry">行业</span><p>风格：质量、流动性、波动率<br>行业：房地产、银行</p></div>
+        <div class="mini"><b>M002</b><span class="route-tag all-a">全A</span><p>影响市场投融资制度与共同定价环境</p></div>
+      </article>
+      <div class="arrow">→</div>
+      <article class="flow-card output-card">
+        <div class="step">OUTPUT</div><h3>结构化结果</h3>
+        <p>JSONL：保留完整层级</p><p>CSV：人工复核与统计</p><p>标注模板：下一步形成真值</p>
+      </article>
+    </div>
+  </div>
+
+  <h2>二、实验设置</h2>
+  <table class="simple-table">
+    <tr><th>项目</th><th>本次设置</th></tr>
+    <tr><td>新闻来源</td><td>华尔街见闻公开7×24快讯；2026-07-22 至 2026-08-06</td></tr>
+    <tr><td>样本形成</td><td>约6000条历史快讯 → 332条规则候选 → 150条主题均衡候选 → 81条有效政策候选 → 最终50条</td></tr>
+    <tr><td>模型</td><td>硅基流动 · Qwen/Qwen3.5-35B-A3B · 关闭思考模式 · JSON Mode</td></tr>
+    <tr><td>任务</td><td>第一阶段拆 measure；第二阶段判断全A、风格、行业，三个标签允许重叠</td></tr>
+    <tr><td>正式调用</td><td>157次；输入 154,579 tokens，输出 31,845 tokens</td></tr>
+    <tr><td>成本</td><td>候选筛选约 ¥0.17，最终正式运行约 ¥0.16，合计约 ¥0.33（不含调试重跑）</td></tr>
+  </table>
+
+  <h2>三、拆分与分类结果</h2>
+  <div class="result-grid">
+    <section>
+      <h3>Routing标签</h3>
+      <div class="bar-row"><span>行业</span><div class="bar"><i style="width:78.1%"></i></div><b>82</b></div>
+      <div class="bar-row"><span>全A</span><div class="bar"><i style="width:8.6%"></i></div><b>9</b></div>
+      <div class="bar-row"><span>风格</span><div class="bar"><i style="width:4.8%"></i></div><b>5</b></div>
+      <div class="bar-row"><span>不路由</span><div class="bar"><i style="width:11.4%"></i></div><b>12</b></div>
+      <p class="table-note">标签允许重叠，因此合计会超过105。行业占比较高与本轮能源、制造、产业标准样本较多有关。</p>
+    </section>
+    <section>
+      <h3>自动质量检查</h3>
+      <div class="checks">
+        <div class="check">50条输入<br><b>50条输出</b></div>
+        <div class="check">流程错误<br><b>0</b></div>
+        <div class="check">证据命中<br><b>105 / 105</b></div>
+        <div class="check">Schema冲突<br><b>0</b></div>
+        <div class="check">非法行业标签<br><b>0</b></div>
+        <div class="check">高度重复measure<br><b>0对</b></div>
+      </div>
+    </section>
+  </div>
+
+  <h2>四、105条政策measure与分类结果</h2>
+  <p class="table-note">下表可横向滚动，左侧序号固定；标题可打开原新闻。每一行是一条measure，而不是一整篇新闻。</p>
+  <div class="policy-table-wrap" aria-label="政策measure完整分类表">
+    <table class="policy-table">
+      <thead><tr><th>序号</th><th>日期</th><th>主题</th><th>政策新闻</th><th>Measure</th><th>措施概括</th><th>原文证据</th><th>路由</th><th>风格维度</th><th>行业</th><th>置信度</th><th>分类理由</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="num">1</td>
+          <td class="nowrap">2026-08-03</td>
+          <td class="nowrap">能源与环保</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3144029">两部门：到2030年，核电装机约1.1亿千瓦</a></td>
+          <td class="nowrap">M001</td>
+          <td>设定到2030年核电装机约1.1亿千瓦的量化目标</td>
+          <td>到2030年，核电装机约1.1亿千瓦</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>电力设备</td>
+          <td class="num">0.95</td>
+          <td>该政策设定了核电装机容量的具体量化目标，直接引导电力设备行业的投资与建设节奏，属于针对特定行业的供给端政策。</td>
+        </tr>
+        <tr>
+          <td class="num">1</td>
+          <td class="nowrap">2026-08-03</td>
+          <td class="nowrap">能源与环保</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3144029">两部门：到2030年，核电装机约1.1亿千瓦</a></td>
+          <td class="nowrap">M002</td>
+          <td>推动核电规模化建设并推进新一代核电技术研发示范和推广应用</td>
+          <td>推动核电规模化建设，积极推进新一代核电技术研发示范和推广应用</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>电力设备</td>
+          <td class="num">0.95</td>
+          <td>该政策直接针对核电行业的产能扩张与技术迭代，明确指向电力设备行业的需求与供给变化。政策未涉及全市场流动性或交易制度，也未明确导致不同风格股票间的系统性相对差异。</td>
+        </tr>
+        <tr>
+          <td class="num">1</td>
+          <td class="nowrap">2026-08-03</td>
+          <td class="nowrap">能源与环保</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3144029">两部门：到2030年，核电装机约1.1亿千瓦</a></td>
+          <td class="nowrap">M003</td>
+          <td>多措并举降低小型堆成本并加强核能综合利用和商业模式创新</td>
+          <td>多措并举降低小型堆成本，加强核能综合利用和商业模式创新</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>电力设备</td>
+          <td class="num">0.95</td>
+          <td>该政策直接针对核电行业（属于电力设备行业）的成本降低与商业模式创新，旨在提升该特定行业的经济性与应用范围。政策未涉及全市场流动性或交易制度，也未明确指向大小盘或价值成长等风格因子的系统性差异。</td>
+        </tr>
+        <tr>
+          <td class="num">2</td>
+          <td class="nowrap">2026-07-27</td>
+          <td class="nowrap">综合政策</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3140182">国务院办公厅印发《关于国务院行政复议案件处理程序的若干规定》</a></td>
+          <td class="nowrap">M001</td>
+          <td>印发《关于国务院行政复议案件处理程序的若干规定》并自印发之日起施行，以规范国务院行政复议案件处理程序。</td>
+          <td>日前，国务院办公厅印发《关于国务院行政复议案件处理程序的若干规定》，自印发之日起施行。</td>
+          <td class="nowrap"><span class="route-tag none">不路由</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td class="num">0.95</td>
+          <td>该政策仅规范国务院内部行政复议案件的程序与监督机制，属于行政流程优化，不直接改变A股市场的流动性、交易成本、定价环境或特定行业的供需关系。</td>
+        </tr>
+        <tr>
+          <td class="num">3</td>
+          <td class="nowrap">2026-07-24</td>
+          <td class="nowrap">贸易与外部冲击</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3139332">商务部新闻发言人就将14家欧盟实体列入出口管制管控名单答记者问</a></td>
+          <td class="nowrap">M001</td>
+          <td>将14家欧盟实体列入出口管制管控名单，禁止出口经营者向上述实体出口两用物项，并禁止境外组织和个人将原产于中国的两用物项转移或提供给上述实体。</td>
+          <td>中方决定将拉法特集团等14家欧盟实体列入出口管制管控名单，禁止出口经营者向上述实体出口两用物项，禁止境外组织和个人将原产于中华人民共和国的两用物项转移或提供给上述实体。</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>国防军工|电子|机械设备</td>
+          <td class="num">0.9</td>
+          <td>该政策直接限制两用物项出口，主要影响国防军工、电子及机械设备等涉及敏感技术出口的行业供给与合规成本。由于仅针对特定欧盟实体，不改变全市场流动性或普遍性行业供需，故不触发全市场或风格标签。</td>
+        </tr>
+        <tr>
+          <td class="num">4</td>
+          <td class="nowrap">2026-07-24</td>
+          <td class="nowrap">财政与税收</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3139293">三部门将开展征收挥发性有机物环境保护税试点</a></td>
+          <td class="nowrap">M001</td>
+          <td>自2027年1月1日起开展挥发性有机物环境保护税试点，将挥发性有机物全部纳入征税范围。</td>
+          <td>明确自2027年1月1日起开展征收挥发性有机物环境保护税试点，挥发性有机物将全部纳入征税范围</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>基础化工|石油石化|环保</td>
+          <td class="num">0.95</td>
+          <td>该政策直接针对挥发性有机物排放征收环境保护税，将显著增加化工、石油石化及环保等相关行业的合规成本与运营约束。此措施属于特定行业的供给端监管政策，不直接改变全市场流动性或系统性风险定价环境。</td>
+        </tr>
+        <tr>
+          <td class="num">4</td>
+          <td class="nowrap">2026-07-24</td>
+          <td class="nowrap">财政与税收</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3139293">三部门将开展征收挥发性有机物环境保护税试点</a></td>
+          <td class="nowrap">M002</td>
+          <td>首批将印刷、化学原料和化学制品制造等八个行业纳入征收试点范围。</td>
+          <td>首批纳入征收试点范围的行业包括印刷、化学原料和化学制品制造等八个行业</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>基础化工|轻工制造</td>
+          <td class="num">0.95</td>
+          <td>该政策直接针对印刷、化学原料和化学制品制造等特定行业征收环保税，将直接增加这些行业的合规成本并改变其供给约束。政策范围限定于特定行业，不改变全市场流动性或系统性风险，也未明确导致不同风格股票间的相对估值差异。</td>
+        </tr>
+        <tr>
+          <td class="num">4</td>
+          <td class="nowrap">2026-07-24</td>
+          <td class="nowrap">财政与税收</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3139293">三部门将开展征收挥发性有机物环境保护税试点</a></td>
+          <td class="nowrap">M003</td>
+          <td>设定挥发性有机物环境保护税税额幅度为每污染当量8元至12元，由省级政府确定具体适用税额。</td>
+          <td>挥发性有机物环境保护税的税额幅度为每污染当量8元至12元。具体适用税额由各省、自治区、直辖市人民政府在规定的税额幅度内确定</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>环保|基础化工|石油石化</td>
+          <td class="num">0.9</td>
+          <td>该政策直接针对挥发性有机物排放征收环境保护税，将增加化工、石化及环保相关企业的合规成本或运营约束。这属于针对特定污染物排放的行业性监管政策，直接影响相关行业的供给成本与竞争格局。</td>
+        </tr>
+        <tr>
+          <td class="num">5</td>
+          <td class="nowrap">2026-07-29</td>
+          <td class="nowrap">综合政策</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3141549">《智能家用电器质量安全风险分类评价指南》国家标准发布</a></td>
+          <td class="nowrap">M001</td>
+          <td>发布智能家用电器质量安全风险分类评价国家标准，确立风险分类原则、指标与方法，统一评估流程与分级机制。</td>
+          <td>市场监管总局近日批准发布《智能家用电器质量安全风险分类评价指南》（GB/T 47777—2026）国家标准，将于2027年2月1日起实施。</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>家用电器</td>
+          <td class="num">0.95</td>
+          <td>该政策直接针对智能家用电器行业发布质量安全风险分类评价国家标准，规范行业风险管控与评估流程。其影响直接作用于该行业的供给端合规成本与产品标准，属于明确的行业监管政策。</td>
+        </tr>
+        <tr>
+          <td class="num">6</td>
+          <td class="nowrap">2026-07-29</td>
+          <td class="nowrap">消费与民生</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3141499">商务部：进一步加力推动城市一刻钟便民生活圈建设</a></td>
+          <td class="nowrap">M001</td>
+          <td>设定2026年全国建设1万个城市一刻钟便民生活圈的量化目标并加快进度</td>
+          <td>2026年完成全国建设1万个便民生活圈的既定目标</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>商贸零售|社会服务|建筑装饰</td>
+          <td class="num">0.9</td>
+          <td>该政策直接设定社区商业设施建设目标，将直接增加商贸零售、社会服务及建筑装饰行业的订单需求与业务规模。</td>
+        </tr>
+        <tr>
+          <td class="num">6</td>
+          <td class="nowrap">2026-07-29</td>
+          <td class="nowrap">消费与民生</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3141499">商务部：进一步加力推动城市一刻钟便民生活圈建设</a></td>
+          <td class="nowrap">M002</td>
+          <td>依托便民生活圈开展惠民促销活动，丰富社区消费场景</td>
+          <td>各地要依托便民生活圈开展丰富多彩的惠民促销活动，推动国货“潮品”、外贸优品、本地精品、国际名品进社区，依法依规设置展区展台，丰富社区消费场景</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>商贸零售|社会服务</td>
+          <td class="num">0.9</td>
+          <td>该政策直接针对社区消费场景，通过组织商品进社区展销刺激需求，直接利好商贸零售（商品销售）和社会服务（社区生活服务）行业。政策未涉及全市场流动性或制度性变化，也未明确导致不同风格股票间的系统性估值差异。</td>
+        </tr>
+        <tr>
+          <td class="num">6</td>
+          <td class="nowrap">2026-07-29</td>
+          <td class="nowrap">消费与民生</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3141499">商务部：进一步加力推动城市一刻钟便民生活圈建设</a></td>
+          <td class="nowrap">M003</td>
+          <td>鼓励家电、数码等以旧换新及购新补贴政策主体在社区设立便民服务点</td>
+          <td>要鼓励家电以旧换新、数码和智能产品购新补贴政策参与主体，在社区举办宣传促销活动，引导生产、销售、平台、售后服务和回收企业在社区设立便民服务点</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>家用电器|电子</td>
+          <td class="num">0.9</td>
+          <td>该政策直接针对家电和数码产品的以旧换新及购新补贴环节，通过设立社区服务点降低消费门槛，直接改变家电和电子行业的销售供给与需求环境。政策未涉及全市场流动性或系统性风险，也未明确导致不同风格股票间的相对估值差异。</td>
+        </tr>
+        <tr>
+          <td class="num">6</td>
+          <td class="nowrap">2026-07-29</td>
+          <td class="nowrap">消费与民生</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3141499">商务部：进一步加力推动城市一刻钟便民生活圈建设</a></td>
+          <td class="nowrap">M004</td>
+          <td>鼓励汽车企业在社区开展以旧换新宣传及展示展销活动</td>
+          <td>要鼓励汽车生产、流通、回收企业在社区宣传汽车以旧换新政策，在有条件的社区开展汽车展示展销、体验试驾等活动</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>汽车</td>
+          <td class="num">0.95</td>
+          <td>该政策直接针对汽车生产、流通及回收企业，通过社区展销和试驾活动促进以旧换新，直接改变汽车行业的销售需求和供给效率。政策未涉及全市场流动性或系统性制度变化，也未明确导致不同风格股票间的相对估值差异。</td>
+        </tr>
+        <tr>
+          <td class="num">7</td>
+          <td class="nowrap">2026-08-06</td>
+          <td class="nowrap">科技与制造</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3145884">工信部：引导民爆产能向需求集中、缺口扩大的地区转移，限制产能过剩地区产能转入</a></td>
+          <td class="nowrap">M001</td>
+          <td>引导民爆产能向需求集中、缺口扩大的地区转移，并限制产能过剩地区产能转入</td>
+          <td>引导产能向需求集中、缺口扩大的地区转移，限制产能过剩地区产能转入</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>国防军工</td>
+          <td class="num">0.9</td>
+          <td>该政策直接针对民用爆炸物品行业的产能布局进行行政规划调整，明确限制产能过剩地区的转入并引导向需求集中地区转移，直接改变该行业的供给约束和区域供需结构。民爆行业属于国防军工产业链的上游关键细分领域，因此归类为国防军工行业研究。</td>
+        </tr>
+        <tr>
+          <td class="num">7</td>
+          <td class="nowrap">2026-08-06</td>
+          <td class="nowrap">科技与制造</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3145884">工信部：引导民爆产能向需求集中、缺口扩大的地区转移，限制产能过剩地区产能转入</a></td>
+          <td class="nowrap">M002</td>
+          <td>原则上不新增产能过剩品种的许可产能</td>
+          <td>原则上不新增产能过剩品种的许可产能</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>基础化工</td>
+          <td class="num">0.95</td>
+          <td>该政策直接针对民爆行业（属于基础化工）的产能许可进行行政限制，旨在遏制产能过剩并引导区域转移。其传导机制是通过行政许可控制供给端，直接影响该行业的供需平衡和竞争格局，而非全市场或风格因子。</td>
+        </tr>
+        <tr>
+          <td class="num">7</td>
+          <td class="nowrap">2026-08-06</td>
+          <td class="nowrap">科技与制造</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3145884">工信部：引导民爆产能向需求集中、缺口扩大的地区转移，限制产能过剩地区产能转入</a></td>
+          <td class="nowrap">M003</td>
+          <td>支持企业面向特定行业需求开展个性化定制服务，提升有效供给能力</td>
+          <td>支持企业面向煤炭、金属矿山和非金属矿山、基础设施建设等需求，开展个性化定制服务，提升有效供给能力</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>基础化工</td>
+          <td class="num">0.95</td>
+          <td>该政策直接针对民爆行业（属于基础化工）的产能布局与供给结构进行引导，通过鼓励定制化服务提升特定下游需求（煤炭、矿山等）的匹配度，直接改变该行业的供需与成本约束。</td>
+        </tr>
+        <tr>
+          <td class="num">8</td>
+          <td class="nowrap">2026-07-24</td>
+          <td class="nowrap">资本市场制度</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3139357">香港证监会优化单日杠杆及反向产品的监管框架以确保市场有序交易</a></td>
+          <td class="nowrap">M001</td>
+          <td>强制杠杆及反向产品采用灵活杠杆结构，允许在现有上限内每日调整杠杆倍数</td>
+          <td>将规定其容量高度受市况变化影响的杠杆及反向产品，须采用灵活杠杆结构。在此结构下，杠杆倍数可在现有上限（即杠杆产品为2倍，反向产品为-2倍）内每日调整</td>
+          <td class="nowrap"><span class="route-tag none">不路由</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td class="num">0.95</td>
+          <td>该政策针对香港市场的特定衍生品（杠杆及反向产品）进行监管优化，旨在提升产品风险管理的灵活性，属于局部产品监管措施。其影响范围局限于特定金融工具的交易机制，未直接改变A股全市场的定价环境、风格因子暴露或实体行业的供需基本面。</td>
+        </tr>
+        <tr>
+          <td class="num">8</td>
+          <td class="nowrap">2026-07-24</td>
+          <td class="nowrap">资本市场制度</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3139357">香港证监会优化单日杠杆及反向产品的监管框架以确保市场有序交易</a></td>
+          <td class="nowrap">M002</td>
+          <td>强制披露下一交易日的杠杆倍数</td>
+          <td>该等产品于下一交易日的杠杆倍数将于每日收市后披露</td>
+          <td class="nowrap"><span class="route-tag none">不路由</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td class="num">0.95</td>
+          <td>该措施属于针对特定衍生品（杠杆及反向产品）的局部监管优化，旨在提升信息披露透明度，不直接改变全市场流动性、交易成本或系统性风险定价环境。同时，它未对股票风格因子（如大小盘、价值成长）或实体行业供需产生直接传导机制。</td>
+        </tr>
+        <tr>
+          <td class="num">9</td>
+          <td class="nowrap">2026-08-03</td>
+          <td class="nowrap">能源与环保</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3144033">两部门：到2030年，西电东送规模超过4.2亿千瓦</a></td>
+          <td class="nowrap">M001</td>
+          <td>设定到2030年西电东送规模超过4.2亿千瓦的目标</td>
+          <td>到2030年，西电东送规模超过4.2亿千瓦</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>电力设备|公用事业</td>
+          <td class="num">0.95</td>
+          <td>该政策设定了西电东送的具体规模目标，直接引导电力基础设施的投资与建设，明确利好电力设备（如特高压设备）和公用事业（电网运营）行业。此政策不改变全市场流动性或交易制度，也不直接导致不同风格股票间的系统性相对估值差异。</td>
+        </tr>
+        <tr>
+          <td class="num">9</td>
+          <td class="nowrap">2026-08-03</td>
+          <td class="nowrap">能源与环保</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3144033">两部门：到2030年，西电东送规模超过4.2亿千瓦</a></td>
+          <td class="nowrap">M002</td>
+          <td>推动存量直流输电通道改造升级</td>
+          <td>推动存量直流输电通道改造升级</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>电力设备|公用事业</td>
+          <td class="num">0.9</td>
+          <td>该政策直接针对存量直流输电通道的改造升级，将直接增加电力设备（如特高压设备、换流阀等）的订单需求，并提升公用事业（电网运营）的输送效率与资产价值。</td>
+        </tr>
+        <tr>
+          <td class="num">9</td>
+          <td class="nowrap">2026-08-03</td>
+          <td class="nowrap">能源与环保</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3144033">两部门：到2030年，西电东送规模超过4.2亿千瓦</a></td>
+          <td class="nowrap">M003</td>
+          <td>加快推动“十四五”时期已纳规输电通道尽早建成投运</td>
+          <td>加快推动“十四五”时期已纳规输电通道尽早建成投运</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>电力设备|公用事业</td>
+          <td class="num">0.9</td>
+          <td>该政策直接加速输电通道建设，明确增加电力供应能力，直接利好电力设备（特高压设备）和公用事业（电网运营）行业的需求与供给。政策未涉及全市场流动性或系统性风险，也未造成不同风格股票间的相对估值差异。</td>
+        </tr>
+        <tr>
+          <td class="num">9</td>
+          <td class="nowrap">2026-08-03</td>
+          <td class="nowrap">能源与环保</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3144033">两部门：到2030年，西电东送规模超过4.2亿千瓦</a></td>
+          <td class="nowrap">M004</td>
+          <td>开展“沙戈荒”等100%新能源外送输电工程试点</td>
+          <td>开展“沙戈荒”等100%新能源外送输电工程试点</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>电力设备|公用事业</td>
+          <td class="num">0.9</td>
+          <td>该政策直接针对新能源外送输电工程试点，明确涉及电力设备（特高压、输电设施）的制造与建设需求，以及公用事业（电力运营）的供给结构变化。政策聚焦于特定行业的技术路径和产能扩张，不直接改变全市场流动性或系统性风险，也未形成跨风格因子的普遍性相对估值差异。</td>
+        </tr>
+        <tr>
+          <td class="num">10</td>
+          <td class="nowrap">2026-07-30</td>
+          <td class="nowrap">综合政策</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3142301">国家发改委发布《电网公平开放监管办法》（公开征求意见稿）</a></td>
+          <td class="nowrap">M001</td>
+          <td>设定电源项目接入电网的准入条件，包括符合产业政策、列入规划或取得核准、满足增量配电改革试点政策。</td>
+          <td>其中提出，向电网企业申请接入电网的电源项目，应满足以下条件： （一）符合国家产业政策，不属于国家《产业结构调整指导目录》中淘汰类及限制类项目； （二）已列入政府批准的规划或年度实施方案，或取得核准（备案）文件； （三）接入增量配电网的电源项目，应满足国家关于增量配电业务改革试点的相关政策。</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>电力设备|公用事业</td>
+          <td class="num">0.9</td>
+          <td>该政策直接设定电源项目接入电网的准入条件，明确限制不符合产业政策和规划的项目，直接影响电力设备（电源侧）和公用事业（电网侧）的供需与项目落地节奏。</td>
+        </tr>
+        <tr>
+          <td class="num">11</td>
+          <td class="nowrap">2026-07-23</td>
+          <td class="nowrap">消费与民生</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3138580">北京2026年消费品以旧换新补贴产品扩容</a></td>
+          <td class="nowrap">M001</td>
+          <td>北京市新增10类智能家居产品纳入2026年消费品以旧换新补贴范围，对购买者给予补贴。</td>
+          <td>增加10类补贴产品，现将有关事项公告如下：对在京个人消费者购买智能门锁、智能摄像头、智能扫地机（含智能洗地机、智能吸尘器）、智能马桶（含智能马桶盖）、数码相机（含运动相机）、智能耳机、全屋智能主机（含智慧家庭服务器、智能网关）、智能床（含智能床垫）、智能电动轮椅、具身智能机器人（含陪伴类机器人、机器狗、外骨骼机器人、养老照护机器人）等10类产品给予补贴。</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>家用电器|电子|机械设备</td>
+          <td class="num">0.95</td>
+          <td>该政策直接针对智能家居产品（如智能家电、电子设备及具身智能机器人）提供财政补贴，直接降低相关产品的终端购买成本并刺激需求。这属于对特定行业（家用电器、电子、机械设备）的供给侧与需求侧直接干预，而非全市场宏观环境或系统性风格因子的变化。</td>
+        </tr>
+        <tr>
+          <td class="num">11</td>
+          <td class="nowrap">2026-07-23</td>
+          <td class="nowrap">消费与民生</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3138580">北京2026年消费品以旧换新补贴产品扩容</a></td>
+          <td class="nowrap">M002</td>
+          <td>对纳入补贴范围的智能家居产品设定15%的补贴比例及每件最高1500元的补贴上限。</td>
+          <td>对个人消费者购买上述智能家居产品（含适老化家居产品），补贴标准为上述产品扣除各环节优惠后最终销售价格的15%，每人每类可补贴1件，每件补贴不超过1500元。</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>家用电器|电子</td>
+          <td class="num">0.95</td>
+          <td>该政策直接针对智能家居产品设定补贴比例和上限，直接增加家电和电子行业的终端需求。政策对象明确限定为特定消费品，不改变全市场流动性或系统性风险，也不直接导致不同风格股票间的相对估值差异。</td>
+        </tr>
+        <tr>
+          <td class="num">12</td>
+          <td class="nowrap">2026-07-30</td>
+          <td class="nowrap">货币与金融</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3142504">英国央行决议要点汇总</a></td>
+          <td class="nowrap">M001</td>
+          <td>英国央行决定维持基准利率在3.75%不变。</td>
+          <td>英国央行内部以6:3的投票结果，维持利率在3.75%不变</td>
+          <td class="nowrap"><span class="route-tag all-a">全A</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td class="num">0.85</td>
+          <td>英国央行作为全球主要央行之一，其利率决议通过全球汇率、跨境资本流动及风险偏好传导至A股共同定价环境。维持利率不变直接影响了全球流动性预期和跨境资金对A股的配置逻辑，属于系统性宏观政策传导。</td>
+        </tr>
+        <tr>
+          <td class="num">12</td>
+          <td class="nowrap">2026-07-30</td>
+          <td class="nowrap">货币与金融</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3142504">英国央行决议要点汇总</a></td>
+          <td class="nowrap">M002</td>
+          <td>英国央行计划于9月就下一年度量化紧缩计划作出决定。</td>
+          <td>将在9月就下一年度量化紧缩计划作出决定</td>
+          <td class="nowrap"><span class="route-tag all-a">全A</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td class="num">0.9</td>
+          <td>英国央行作为全球主要央行，其量化紧缩计划直接决定全球流动性供给与长期利率水平，进而通过跨境资本流动和风险偏好传导至A股全市场共同定价环境。该政策属于能够经全球利率、汇率或流动性传导至A股共同定价环境的正式政策决定。</td>
+        </tr>
+        <tr>
+          <td class="num">13</td>
+          <td class="nowrap">2026-07-23</td>
+          <td class="nowrap">贸易与外部冲击</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3138720">商务部：将加快修订出台关于外国投资者并购境内企业的规定</a></td>
+          <td class="nowrap">M001</td>
+          <td>加快修订出台关于外国投资者并购境内企业的规定</td>
+          <td>还将加快修订出台关于外国投资者并购境内企业的规定</td>
+          <td class="nowrap"><span class="route-tag none">不路由</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td class="num">0.9</td>
+          <td>该政策针对特定交易类型（外资并购）的法规修订，属于微观制度优化，未直接改变全市场流动性、交易成本或系统性风险环境。同时，其影响未明确指向特定行业供需或特定风格因子（如大小盘、价值成长）的系统性差异，因此不触发全市场、风格或行业路由。</td>
+        </tr>
+        <tr>
+          <td class="num">13</td>
+          <td class="nowrap">2026-07-23</td>
+          <td class="nowrap">贸易与外部冲击</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3138720">商务部：将加快修订出台关于外国投资者并购境内企业的规定</a></td>
+          <td class="nowrap">M002</td>
+          <td>稳妥有序深化增值电信、生物技术、外商独资医院和职业技能培训机构等领域的开放试点</td>
+          <td>稳妥有序深化增值电信、生物技术、外商独资医院和职业技能培训机构等领域的开放试点</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>计算机|医药生物|社会服务</td>
+          <td class="num">0.95</td>
+          <td>政策直接放宽增值电信、生物技术、外商独资医院和职业技能培训等领域的准入限制，直接改变相关行业的供给约束和竞争格局。这些领域分别对应计算机、医药生物和社会服务行业，属于特定行业监管与开放政策。</td>
+        </tr>
+        <tr>
+          <td class="num">13</td>
+          <td class="nowrap">2026-07-23</td>
+          <td class="nowrap">贸易与外部冲击</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3138720">商务部：将加快修订出台关于外国投资者并购境内企业的规定</a></td>
+          <td class="nowrap">M003</td>
+          <td>支持北京市提升国家服务业综合示范区建设水平</td>
+          <td>支持北京市提升国家服务业综合示范区建设水平</td>
+          <td class="nowrap"><span class="route-tag none">不路由</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td class="num">0.95</td>
+          <td>该政策针对北京市特定区域的服务业示范区建设，属于区域性产业支持措施，未直接改变全市场共同定价环境，也未明确指向特定行业或风格因子的系统性相对差异。</td>
+        </tr>
+        <tr>
+          <td class="num">14</td>
+          <td class="nowrap">2026-07-28</td>
+          <td class="nowrap">财政与税收</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3140864">两部门：调整部分能源资源行业企业城镇土地使用税政策</a></td>
+          <td class="nowrap">M001</td>
+          <td>对符合条件的能源资源行业企业土地，在2026年9月1日至2027年8月31日期间按应纳税额减半征收城镇土地使用税。</td>
+          <td>自2026年9月1日至2027年8月31日，按应纳税额减半征收城镇土地使用税</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>煤炭|石油石化|有色金属</td>
+          <td class="num">0.95</td>
+          <td>该政策直接针对能源资源行业企业实施土地税减半征收，通过降低特定行业的运营成本直接影响其盈利预期。政策对象明确限定为部分能源资源企业，未涉及全市场流动性或系统性制度变更，也不构成跨风格因子的普遍性差异。</td>
+        </tr>
+        <tr>
+          <td class="num">14</td>
+          <td class="nowrap">2026-07-28</td>
+          <td class="nowrap">财政与税收</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3140864">两部门：调整部分能源资源行业企业城镇土地使用税政策</a></td>
+          <td class="nowrap">M002</td>
+          <td>自2027年9月1日起，对前述企业土地全额征收城镇土地使用税，并废止相关旧文件。</td>
+          <td>自2027年9月1日起，全额征收城镇土地使用税，（89）国税地字第013号等文件同时废止</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>石油石化|煤炭|有色金属</td>
+          <td class="num">0.95</td>
+          <td>该政策直接针对能源资源行业特定企业的土地税收优惠进行取消，将增加相关企业的运营成本并改变其盈利预期。由于政策明确指向能源资源领域的特定企业，属于行业层面的供给与成本约束调整，而非全市场或风格因子的系统性变化。</td>
+        </tr>
+        <tr>
+          <td class="num">15</td>
+          <td class="nowrap">2026-07-30</td>
+          <td class="nowrap">房地产</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3142203">中共中央政治局会议：深化资本市场投融资综合改革，提升资本市场韧性和信心</a></td>
+          <td class="nowrap">M001</td>
+          <td>实施一揽子化债方案以稳定房地产市场并推进地方中小金融机构改革化险</td>
+          <td>实施好一揽子化债方案，扎实推进地方中小金融机构改革化险、减量提质</td>
+          <td class="nowrap"><span class="route-tag all-a">全A</span><span class="route-tag style">风格</span><span class="route-tag industry">行业</span></td>
+          <td>quality|liquidity|volatility</td>
+          <td>房地产|银行</td>
+          <td class="num">0.9</td>
+          <td>该政策通过化债和金融机构改革直接降低系统性金融风险，改善全市场流动性与风险偏好，属于全市场共同环境变化。同时，风险出清将显著提升高质量、高流动性资产的相对吸引力，并对房地产和银行板块产生直接的供需与监管约束变化。</td>
+        </tr>
+        <tr>
+          <td class="num">15</td>
+          <td class="nowrap">2026-07-30</td>
+          <td class="nowrap">房地产</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3142203">中共中央政治局会议：深化资本市场投融资综合改革，提升资本市场韧性和信心</a></td>
+          <td class="nowrap">M002</td>
+          <td>深化资本市场投融资综合改革以提升市场韧性和信心</td>
+          <td>深化资本市场投融资综合改革，提升资本市场韧性和信心</td>
+          <td class="nowrap"><span class="route-tag all-a">全A</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td class="num">0.9</td>
+          <td>该政策直接针对资本市场投融资制度进行综合改革，属于改变全市场交易制度与流动性的系统性举措，将直接影响A股全市场的共同定价环境与投资者信心。</td>
+        </tr>
+        <tr>
+          <td class="num">16</td>
+          <td class="nowrap">2026-08-06</td>
+          <td class="nowrap">消费与民生</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3145881">工信部：到2030年，形成3~5家具有较强国际运营能力的大型民爆企业集团</a></td>
+          <td class="nowrap">M001</td>
+          <td>通过“十五五”规划引导民爆行业整合，目标到2030年形成3~5家具有较强国际运营能力的大型企业集团。</td>
+          <td>工业和信息化部印发《民用爆炸物品行业安全发展“十五五”规划》提出，到2030年，民爆行业安全水平进一步提高，创新能力持续增强，民用爆炸物品供给能力稳步提升，产业结构、产品结构、产能布局更加优化，治理效能进一步提高，企业经营效益稳中有进。</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>国防军工</td>
+          <td class="num">0.9</td>
+          <td>该政策直接针对民爆行业（属于国防军工一级行业）的产业结构与产能布局进行引导，旨在推动行业整合与规模化发展，直接改变该行业的供给与竞争格局。</td>
+        </tr>
+        <tr>
+          <td class="num">16</td>
+          <td class="nowrap">2026-08-06</td>
+          <td class="nowrap">消费与民生</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3145881">工信部：到2030年，形成3~5家具有较强国际运营能力的大型民爆企业集团</a></td>
+          <td class="nowrap">M002</td>
+          <td>落实企业全员安全生产责任制，加大安全生产投入与职工教育培训，提升现场安全管理水平。</td>
+          <td>企业全员安全生产责任制有效落实，安全生产投入得到有力保障，职工教育培训力度加大，现场安全管理水平显著提高，先进设备加快应用，本质安全水平大幅提升</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>国防军工</td>
+          <td class="num">0.9</td>
+          <td>该政策直接针对民爆行业（属于国防军工一级行业）的企业，通过强制落实安全生产责任制和增加投入，直接改变该行业的供给约束和运营成本结构。政策未涉及全市场流动性或跨风格因子的系统性定价变化，仅聚焦于特定行业的合规与整合。</td>
+        </tr>
+        <tr>
+          <td class="num">16</td>
+          <td class="nowrap">2026-08-06</td>
+          <td class="nowrap">消费与民生</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3145881">工信部：到2030年，形成3~5家具有较强国际运营能力的大型民爆企业集团</a></td>
+          <td class="nowrap">M003</td>
+          <td>加强行业安全监管，遏制重特大生产安全事故。</td>
+          <td>行业安全监管持续加强，重特大生产安全事故得到有效遏制</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>国防军工</td>
+          <td class="num">0.9</td>
+          <td>该政策直接针对民爆行业（国防军工一级行业）实施安全监管与行业整合，改变该行业的供给格局与合规成本。政策未涉及全市场流动性或跨风格因子的系统性定价调整。</td>
+        </tr>
+        <tr>
+          <td class="num">17</td>
+          <td class="nowrap">2026-07-27</td>
+          <td class="nowrap">科技与制造</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3140281">工信部：加快编制出台智能网联新能源汽车产业发展“十五五”规划</a></td>
+          <td class="nowrap">M001</td>
+          <td>加快编制出台智能网联新能源汽车产业发展“十五五”规划</td>
+          <td>工信部将加快编制出台智能网联新能源汽车产业发展“十五五”规划</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>汽车|电子|电力设备</td>
+          <td class="num">0.95</td>
+          <td>该政策直接针对智能网联新能源汽车产业的中长期发展进行规划，明确影响汽车、电子及电力设备等行业的需求与供给路径。</td>
+        </tr>
+        <tr>
+          <td class="num">17</td>
+          <td class="nowrap">2026-07-27</td>
+          <td class="nowrap">科技与制造</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3140281">工信部：加快编制出台智能网联新能源汽车产业发展“十五五”规划</a></td>
+          <td class="nowrap">M002</td>
+          <td>深入推进“车路云一体化”应用试点、生产准入和上路通行试点</td>
+          <td>深入推进“车路云一体化”应用试点、生产准入和上路通行试点</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>汽车|电子|通信</td>
+          <td class="num">0.95</td>
+          <td>该政策直接针对智能网联新能源汽车产业，通过扩大“车路云一体化”试点加速技术落地与商业化，直接改变汽车、电子及通信行业的需求、供给与技术约束。政策未涉及全市场流动性或系统性制度变更，也未明确指向特定风格因子的相对收益差异。</td>
+        </tr>
+        <tr>
+          <td class="num">18</td>
+          <td class="nowrap">2026-07-23</td>
+          <td class="nowrap">资本市场制度</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3138642">香港与马来西亚扩大资本市场跨境准入 推进双重上市与基金互认</a></td>
+          <td class="nowrap">M001</td>
+          <td>简化首次公开招股（IPO）双重上市框架</td>
+          <td>简化首次公开招股(IPO)双重上市框架</td>
+          <td class="nowrap"><span class="route-tag all-a">全A</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td class="num">0.9</td>
+          <td>该政策简化跨境双重上市框架，直接改变A股跨境资金准入与上市制度环境，属于全市场共同定价环境的调整。</td>
+        </tr>
+        <tr>
+          <td class="num">18</td>
+          <td class="nowrap">2026-07-23</td>
+          <td class="nowrap">资本市场制度</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3138642">香港与马来西亚扩大资本市场跨境准入 推进双重上市与基金互认</a></td>
+          <td class="nowrap">M002</td>
+          <td>扩大基金互认安排下的合资格产品范围并允许互挂上市</td>
+          <td>扩大基金互认安排下的合资格产品范围，尤其是涵盖非伊斯兰交易所买卖基金（ETF）和房地产投资信托基金（REIT），并允许符合资格的基金在两地市场互挂上市</td>
+          <td class="nowrap"><span class="route-tag all-a">全A</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td class="num">0.9</td>
+          <td>该政策通过扩大跨境基金互认及允许互挂上市，直接增加了进入A股市场的境外资金渠道与流动性，改变了全市场的共同定价环境。这属于跨境资金准入的实质性制度优化，而非针对特定行业或风格因子的调整。</td>
+        </tr>
+        <tr>
+          <td class="num">19</td>
+          <td class="nowrap">2026-07-31</td>
+          <td class="nowrap">能源与环保</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3142736">工信部印发《工业绿色低碳发展“十五五”规划》</a></td>
+          <td class="nowrap">M001</td>
+          <td>工信部印发《工业绿色低碳发展“十五五”规划》，明确到2030年工业领域二氧化碳排放量达到峰值及优化产业结构和用能结构等目标。</td>
+          <td>工业和信息化部印发《工业绿色低碳发展“十五五”规划》，到2030年，产业结构和用能结构进一步优化，工业领域二氧化碳排放量达到峰值</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>基础化工|钢铁|有色金属|电力设备|机械设备|公用事业|交通运输|建筑材料|建筑装饰|环保|煤炭|石油石化</td>
+          <td class="num">0.95</td>
+          <td>该规划直接针对工业领域的碳排放达峰和用能结构优化，将改变相关行业的供给约束、成本结构及产能布局。政策明确指向高耗能及高排放行业，直接触发对基础化工、钢铁、有色金属、电力设备、机械设备、公用事业、交通运输、建筑材料、建筑装饰、环保、煤炭、石油石化等行业的供需与监管环境变化。</td>
+        </tr>
+        <tr>
+          <td class="num">20</td>
+          <td class="nowrap">2026-07-23</td>
+          <td class="nowrap">能源与环保</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3138508">两部门：“十五五”时期全国海上风电新增开工规模1亿千瓦左右</a></td>
+          <td class="nowrap">M001</td>
+          <td>设定“十五五”期间全国海上风电新增开工规模及2030年累计装机规模目标</td>
+          <td>“十五五”时期，全国海上风电新增开工规模1亿千瓦左右，2030年累计装机规模达到1亿千瓦以上</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>电力设备</td>
+          <td class="num">0.95</td>
+          <td>该政策直接设定海上风电新增开工与装机规模目标，明确改变电力设备行业中风电细分领域的投资需求与建设节奏。</td>
+        </tr>
+        <tr>
+          <td class="num">20</td>
+          <td class="nowrap">2026-07-23</td>
+          <td class="nowrap">能源与环保</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3138508">两部门：“十五五”时期全国海上风电新增开工规模1亿千瓦左右</a></td>
+          <td class="nowrap">M002</td>
+          <td>加快近海海上风电项目建设及已复函项目落地</td>
+          <td>持续加快近海海上风电建设。加快建设已复函省级海上风电项目</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>电力设备</td>
+          <td class="num">0.95</td>
+          <td>该政策直接针对海上风电项目的开工与建设进度进行行政推动，明确增加电力设备行业的需求与产能规划。政策未涉及全市场流动性或系统性风险，也未直接改变不同风格股票（如大小盘、价值成长）的相对估值逻辑。</td>
+        </tr>
+        <tr>
+          <td class="num">20</td>
+          <td class="nowrap">2026-07-23</td>
+          <td class="nowrap">能源与环保</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3138508">两部门：“十五五”时期全国海上风电新增开工规模1亿千瓦左右</a></td>
+          <td class="nowrap">M003</td>
+          <td>开展新一轮省级海上风电规划修订和评估</td>
+          <td>开展新一轮省级海上风电规划修订和评估</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>电力设备</td>
+          <td class="num">0.95</td>
+          <td>该政策直接针对海上风电项目的规划与开工规模，明确指向电力设备行业中的风电产业链需求扩张。政策通过优化区域产业布局直接改变该行业的供给与产能规划，不涉及全市场流动性或跨风格因子的系统性变化。</td>
+        </tr>
+        <tr>
+          <td class="num">20</td>
+          <td class="nowrap">2026-07-23</td>
+          <td class="nowrap">能源与环保</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3138508">两部门：“十五五”时期全国海上风电新增开工规模1亿千瓦左右</a></td>
+          <td class="nowrap">M004</td>
+          <td>优化近海海上风电海缆路由路径</td>
+          <td>做好近海海上风电海缆路由路径优化</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>电力设备</td>
+          <td class="num">0.95</td>
+          <td>该政策直接针对海上风电建设中的海缆路由路径进行优化，属于电力设备行业内的具体工程实施规范。其传导机制是通过提升工程建设效率与安全性，直接改变电力设备行业中风电海缆及相关建设环节的需求与供给条件。</td>
+        </tr>
+        <tr>
+          <td class="num">20</td>
+          <td class="nowrap">2026-07-23</td>
+          <td class="nowrap">能源与环保</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3138508">两部门：“十五五”时期全国海上风电新增开工规模1亿千瓦左右</a></td>
+          <td class="nowrap">M005</td>
+          <td>推进深远海海上风电基地布局建设与项目库管理</td>
+          <td>大力推进深远海海上风电基地布局建设。建立深远海海上风电基地项目库，做好用海等要素协同，分批推动基地项目规范有序建设</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>电力设备</td>
+          <td class="num">0.95</td>
+          <td>该政策直接针对海上风电基地的布局与建设，明确涉及电力设备行业的需求扩张与产能规划。政策通过建立项目库和要素协同，直接改变电力设备行业的供给约束与订单预期，属于特定行业层面的供给侧推动。</td>
+        </tr>
+        <tr>
+          <td class="num">20</td>
+          <td class="nowrap">2026-07-23</td>
+          <td class="nowrap">能源与环保</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3138508">两部门：“十五五”时期全国海上风电新增开工规模1亿千瓦左右</a></td>
+          <td class="nowrap">M006</td>
+          <td>统筹源网工程规划建设及海底输电廊道共享</td>
+          <td>统筹推进源网工程规划建设，推动海底输电廊道和登陆点集约共享</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>电力设备</td>
+          <td class="num">0.95</td>
+          <td>该政策直接针对海上风电项目的规划建设与海底输电廊道共享，明确指向电力设备行业的需求扩张与供给优化。通过提升电网接入效率，直接改变电力设备行业的产能利用与订单预期，不涉及全市场流动性或风格因子的系统性变化。</td>
+        </tr>
+        <tr>
+          <td class="num">21</td>
+          <td class="nowrap">2026-07-28</td>
+          <td class="nowrap">综合政策</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3140770">十一部门：未来五年基层中医药服务将提质升级，力争居民15分钟可达最近的医疗服务点获得中医药服务</a></td>
+          <td class="nowrap">M001</td>
+          <td>十一部门联合印发行动方案，部署基层中医药服务网络优化、能力提升及人才扩容等7项行动和25项任务，旨在提升服务可及性。</td>
+          <td>国家中医药局、国家卫生健康委、国家发展改革委等11个部门日前联合印发《医疗卫生强基工程中医药行动方案》，旨在强化基层中医药服务供给，提升群众看中医的可及性与获得感。</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>医药生物</td>
+          <td class="num">0.95</td>
+          <td>该政策直接针对基层中医药服务网络优化与能力提升，明确增加医药生物行业（特别是中医药服务板块）的供给端需求与政策支持。政策未涉及全市场流动性、交易制度或跨风格因子的系统性变化，仅聚焦于特定行业的业务扩张。</td>
+        </tr>
+        <tr>
+          <td class="num">22</td>
+          <td class="nowrap">2026-08-05</td>
+          <td class="nowrap">贸易与外部冲击</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3145331">中国机电商会：支持商务部对相关产品启动对外贸易国家安全调查</a></td>
+          <td class="nowrap">M001</td>
+          <td>商务部对进口打印复印办公设备启动对外贸易国家安全调查，并视情出台必要措施。</td>
+          <td>商务部发布公告，对相关进口打印复印办公设备启动对外贸易国家安全调查。</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>电子</td>
+          <td class="num">0.9</td>
+          <td>该政策直接针对进口打印复印办公设备启动国家安全调查，将直接影响电子行业中相关细分领域的供给、成本及竞争格局。此措施属于针对特定产品类别的监管约束，不改变全市场流动性或系统性风险，也不直接导致全市场风格因子的相对变化。</td>
+        </tr>
+        <tr>
+          <td class="num">23</td>
+          <td class="nowrap">2026-07-24</td>
+          <td class="nowrap">财政与税收</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3139361">明年起试点 挥发性有机物将全部纳入环保税征税范围</a></td>
+          <td class="nowrap">M001</td>
+          <td>自2027年1月1日起将挥发性有机物全部纳入环境保护税征税范围并开展试点征收。</td>
+          <td>明确自2027年1月1日起开展征收挥发性有机物环境保护税试点，挥发性有机物将全部纳入征税范围</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>环保|基础化工|石油石化</td>
+          <td class="num">0.95</td>
+          <td>该政策直接对挥发性有机物排放征收环保税，将显著增加化工、石油石化等排放行业的合规成本，并直接利好环保治理服务需求。此政策针对特定污染物，不改变全市场流动性或系统性风险，也不直接导致大小盘或价值成长等风格因子的系统性分化。</td>
+        </tr>
+        <tr>
+          <td class="num">24</td>
+          <td class="nowrap">2026-07-31</td>
+          <td class="nowrap">房地产</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3143225">国务院常务会议：审议通过《国务院关于修改〈住房公积金管理条例〉的决定（草案）》和《国务院关于修改和废止部分行政法规的决定（草案）》</a></td>
+          <td class="nowrap">M001</td>
+          <td>修改《住房公积金管理条例》，拓宽提取和使用范围，扩大制度覆盖面。</td>
+          <td>会议指出，要更好发挥住房公积金功能作用，拓宽提取和使用范围，扩大制度覆盖面，更好满足居民多样化住房消费需求。</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>房地产</td>
+          <td class="num">0.9</td>
+          <td>该政策直接调整住房公积金的提取与使用规则，旨在增加居民住房消费资金的可得性，直接作用于房地产行业的住房需求端。政策未涉及全市场流动性、交易制度或系统性风格因子的改变，仅针对特定行业需求进行调节。</td>
+        </tr>
+        <tr>
+          <td class="num">25</td>
+          <td class="nowrap">2026-07-23</td>
+          <td class="nowrap">消费与民生</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3138499">国家发展改革委、国家能源局印发 《可再生能源发展“十五五”规划》</a></td>
+          <td class="nowrap">M001</td>
+          <td>设定2030年可再生能源消费总量、发电装机及发电量目标，包括风电和太阳能装机占比及发电量占比要求。</td>
+          <td>2030年，可再生能源消费总量达到18亿吨标准煤左右。2030年，可再生能源发电总装机达到35亿千瓦左右，年发电量达到6万亿千瓦时左右；风电和太阳能发电总装机达到28亿千瓦以上、装机占比超过50%，年发电量4万亿千瓦时以上，发电量占比达到30%。</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>电力设备|公用事业</td>
+          <td class="num">0.95</td>
+          <td>该规划直接设定了风电和太阳能的装机与发电量目标，明确引导电力设备（风机、光伏组件）及公用事业（发电运营）行业的投资与产能扩张。政策未涉及全市场流动性或系统性风险，也未直接改变不同风格股票间的相对估值逻辑。</td>
+        </tr>
+        <tr>
+          <td class="num">26</td>
+          <td class="nowrap">2026-08-06</td>
+          <td class="nowrap">科技与制造</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3145883">工信部：推广应用无人化生产线，原则上不再新建“一头多尾”、“多头一尾”工业炸药生产线</a></td>
+          <td class="nowrap">M001</td>
+          <td>支持工业炸药行业集约化生产，鼓励企业撤并厂点、拆除落后生产线并淘汰高风险工艺装备。</td>
+          <td>支持集约化生产，鼓励企业撤并生产厂点、拆除落后生产线，减少危险源点。鼓励加大安全生产投入，加快老旧设备设施升级改造和高风险工艺装备淘汰更新</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>基础化工</td>
+          <td class="num">0.95</td>
+          <td>该政策直接针对民用爆炸物品生产企业，属于基础化工行业，通过淘汰落后产能和限制新建特定生产线改变行业供给约束。政策未涉及全市场流动性或系统性风险，也未明确导致不同风格股票间的相对估值差异。</td>
+        </tr>
+        <tr>
+          <td class="num">26</td>
+          <td class="nowrap">2026-08-06</td>
+          <td class="nowrap">科技与制造</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3145883">工信部：推广应用无人化生产线，原则上不再新建“一头多尾”、“多头一尾”工业炸药生产线</a></td>
+          <td class="nowrap">M002</td>
+          <td>推广应用无人化生产线，原则上不再新建“一头多尾”、“多头一尾”工业炸药生产线。</td>
+          <td>推广应用无人化生产线，原则上不再新建“一头多尾”、“多头一尾”工业炸药生产线。</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>基础化工</td>
+          <td class="num">0.95</td>
+          <td>该政策直接限制工业炸药生产线的建设并推广无人化技术，直接改变基础化工行业中特定细分领域的供给约束和资本开支方向。</td>
+        </tr>
+        <tr>
+          <td class="num">27</td>
+          <td class="nowrap">2026-07-23</td>
+          <td class="nowrap">资本市场制度</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3138876">证监会：依法严查严处财务造假、内幕交易、操纵市场等违法违规行为</a></td>
+          <td class="nowrap">M001</td>
+          <td>依法严查严处财务造假、内幕交易、操纵市场等违法违规行为</td>
+          <td>依法严查严处财务造假、内幕交易、操纵市场等违法违规行为</td>
+          <td class="nowrap"><span class="route-tag style">风格</span></td>
+          <td>quality|liquidity</td>
+          <td>—</td>
+          <td class="num">0.9</td>
+          <td>严查财务造假和操纵市场等违法行为将直接提升上市公司整体质量，使高质量龙头公司相对低质量公司获得估值溢价。同时，打击操纵市场有助于修复市场流动性结构，使高流动性股票相对低流动性股票受益。</td>
+        </tr>
+        <tr>
+          <td class="num">27</td>
+          <td class="nowrap">2026-07-23</td>
+          <td class="nowrap">资本市场制度</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3138876">证监会：依法严查严处财务造假、内幕交易、操纵市场等违法违规行为</a></td>
+          <td class="nowrap">M002</td>
+          <td>加强新型业务监管并推进人工智能在监管中的应用</td>
+          <td>加强新型业务监管，推进人工智能在监管中的应用</td>
+          <td class="nowrap"><span class="route-tag none">不路由</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td class="num">0.9</td>
+          <td>该措施聚焦于特定新型业务的监管手段升级，未直接改变全市场流动性、交易成本或系统性定价环境，因此不触发all_a。同时，政策未明确针对特定行业供需或特定股票特征（如大小盘、价值成长）产生系统性差异，故不标记style或industry。</td>
+        </tr>
+        <tr>
+          <td class="num">27</td>
+          <td class="nowrap">2026-07-23</td>
+          <td class="nowrap">资本市场制度</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3138876">证监会：依法严查严处财务造假、内幕交易、操纵市场等违法违规行为</a></td>
+          <td class="nowrap">M003</td>
+          <td>夯实财务造假综合惩防体系，推动上市公司规范治理</td>
+          <td>进一步夯实财务造假综合惩防体系，更大力度推动上市公司规范治理</td>
+          <td class="nowrap"><span class="route-tag style">风格</span></td>
+          <td>quality</td>
+          <td>—</td>
+          <td class="num">0.9</td>
+          <td>该政策通过严查财务造假和推动规范治理，直接提升上市公司整体质量，导致高质量龙头公司与低质量公司之间的估值和表现出现系统性分化。这种机制主要作用于股票的质量因子，而非全市场流动性或特定行业供需。</td>
+        </tr>
+        <tr>
+          <td class="num">27</td>
+          <td class="nowrap">2026-07-23</td>
+          <td class="nowrap">资本市场制度</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3138876">证监会：依法严查严处财务造假、内幕交易、操纵市场等违法违规行为</a></td>
+          <td class="nowrap">M004</td>
+          <td>持续释放并购重组活力</td>
+          <td>持续释放并购重组活力</td>
+          <td class="nowrap"><span class="route-tag style">风格</span></td>
+          <td>quality|liquidity</td>
+          <td>—</td>
+          <td class="num">0.85</td>
+          <td>政策明确针对并购重组活动，直接改变市场融资与整合机制。该机制对具备优质资产和整合能力的龙头企业（高质量）以及流动性较好的公司产生相对正向影响，而对低质量或流动性差的标的构成出清压力，从而引发风格分化。</td>
+        </tr>
+        <tr>
+          <td class="num">28</td>
+          <td class="nowrap">2026-07-29</td>
+          <td class="nowrap">能源与环保</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3141556">多部门联合发布《国家应对气候变化“十五五”规划》</a></td>
+          <td class="nowrap">M001</td>
+          <td>发布《国家应对气候变化“十五五”规划》，设定2030年单位GDP二氧化碳排放较2025年降低17%的约束性目标。</td>
+          <td>提出到2030年，单位国内生产总值二氧化碳排放较2025年降低17%</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>电力设备|环保|公用事业</td>
+          <td class="num">0.9</td>
+          <td>该规划设定了具体的碳排放约束性目标，将直接改变电力设备、环保及公用事业等行业的供给约束、技术路线和成本结构。政策通过强制减排目标引导相关产业投资与产能调整，属于直接的行业供给侧政策。</td>
+        </tr>
+        <tr>
+          <td class="num">29</td>
+          <td class="nowrap">2026-07-28</td>
+          <td class="nowrap">综合政策</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3140896">生态环境部：推动建立生态环境损害赔偿制度规范体系</a></td>
+          <td class="nowrap">M001</td>
+          <td>推进部门规章研究编制，构建以生态环境法典为统领的损害赔偿制度规范体系</td>
+          <td>一是进一步加强立法，推进部门规章的研究编制，推动形成以生态环境法典为统领、相关配套制度为支撑的生态环境损害赔偿制度规范体系</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>环保</td>
+          <td class="num">0.9</td>
+          <td>该政策直接针对生态环境损害赔偿制度进行立法和规章编制，明确约束环保行业的合规成本与运营规范。其传导机制直接作用于环保行业的供给端和监管约束，不直接改变全市场流动性或系统性风格因子。</td>
+        </tr>
+        <tr>
+          <td class="num">29</td>
+          <td class="nowrap">2026-07-28</td>
+          <td class="nowrap">综合政策</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3140896">生态环境部：推动建立生态环境损害赔偿制度规范体系</a></td>
+          <td class="nowrap">M002</td>
+          <td>推动生态环境损害智能评估系统建设并扩大应用覆盖面</td>
+          <td>二是加强鉴定评估技术保障，推动生态环境损害智能评估（e评估）系统建设，扩大智能评估应用覆盖面</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>环保</td>
+          <td class="num">0.9</td>
+          <td>该政策直接针对生态环境损害智能评估系统的建设与推广，属于环保行业的技术规范与能力建设措施。其影响直接作用于环保行业的供给端（技术服务与设备）及监管约束，不直接改变全市场流动性或系统性风格因子。</td>
+        </tr>
+        <tr>
+          <td class="num">29</td>
+          <td class="nowrap">2026-07-28</td>
+          <td class="nowrap">综合政策</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3140896">生态环境部：推动建立生态环境损害赔偿制度规范体系</a></td>
+          <td class="nowrap">M003</td>
+          <td>健全损害赔偿、生态修复与效果评估的全链条闭环管理模式</td>
+          <td>三是进一步提升生态环境损害修复实效，健全“损害赔偿－生态修复－效果评估”全链条闭环管理模式</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>环保</td>
+          <td class="num">0.95</td>
+          <td>该政策直接针对生态环境损害赔偿与修复的全链条管理，明确规范环保行业的业务模式与监管要求。其传导机制在于通过制度完善直接改变环保行业的需求与供给约束，不直接涉及全市场流动性或跨风格因子差异。</td>
+        </tr>
+        <tr>
+          <td class="num">30</td>
+          <td class="nowrap">2026-07-28</td>
+          <td class="nowrap">科技与制造</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3141031">工信部：将会同相关部门加快编制发布汽车企业供应商货款支付规范指引</a></td>
+          <td class="nowrap">M001</td>
+          <td>工信部推动重点汽车企业缩短供应商账期，并邀请媒体记者担任首批“汽车行业账期问题监督员”以加强监督。</td>
+          <td>通报推动重点汽车企业缩短供应商账期有关情况，邀请20家中央媒体、财经媒体和相关行业媒体记者担任首批“汽车行业账期问题监督员”</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>汽车</td>
+          <td class="num">0.95</td>
+          <td>该政策直接针对汽车产业链中的重点企业和供应商，旨在规范货款支付周期，直接影响汽车行业的现金流、供应链成本及供需关系。政策未涉及全市场流动性或系统性风险，也未明确导致不同风格因子（如大小盘、价值成长）的相对变化。</td>
+        </tr>
+        <tr>
+          <td class="num">31</td>
+          <td class="nowrap">2026-08-05</td>
+          <td class="nowrap">贸易与外部冲击</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3145256">商务部：加强无人机相关两用物项对美国出口管制</a></td>
+          <td class="nowrap">M001</td>
+          <td>对列入清单的无人机及其关键零部件、相关技术对美出口实施逐案从严审核，取消许可便利措施</td>
+          <td>对列入《中华人民共和国两用物项出口管制清单》的无人机及其关键零部件、相关技术对美国出口，逐案从严审核，不适用许可便利措施</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>国防军工</td>
+          <td class="num">0.95</td>
+          <td>该政策直接针对无人机及其关键零部件的出口实施管制，直接影响国防军工行业的供给约束和出口环境。由于仅涉及特定物项的对美出口限制，未改变全市场流动性或系统性风险，也不构成全市场风格因子的变化。</td>
+        </tr>
+        <tr>
+          <td class="num">32</td>
+          <td class="nowrap">2026-08-01</td>
+          <td class="nowrap">财政与税收</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3143511">历史性干预！报道称美国政府周五抛欧元来买日元</a></td>
+          <td class="nowrap">M001</td>
+          <td>美国财政部通过纽约联储干预外汇市场，卖出欧元买入日元以支撑日元汇率</td>
+          <td>美国财政部周五对日元汇兑市场实施了干预，也是近30年来东京和华盛顿首次通过直接买入日元的方式联手撑日本货币。纽约联储代表美国财政部做出不寻常之举 —— 卖出欧元来买入日元。</td>
+          <td class="nowrap"><span class="route-tag all-a">全A</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td class="num">0.85</td>
+          <td>美国财政部直接干预外汇市场买卖欧元和日元，属于全球主要央行的正式政策决定，将通过全球汇率、流动性及风险偏好传导至A股共同定价环境。该操作改变了跨境资金流动的预期和全球风险资产定价基准，符合全市场共同环境变化的定义。</td>
+        </tr>
+        <tr>
+          <td class="num">33</td>
+          <td class="nowrap">2026-07-31</td>
+          <td class="nowrap">房地产</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3143342">国务院常务会议解读｜住房公积金将更好满足居民多样化住房消费需求</a></td>
+          <td class="nowrap">M001</td>
+          <td>国务院常务会议审议通过修改《住房公积金管理条例》的草案，以强化其在促进住房消费和保障民生方面的作用。</td>
+          <td>审议通过《国务院关于修改〈住房公积金管理条例〉的决定（草案）》</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>房地产</td>
+          <td class="num">0.9</td>
+          <td>该政策直接修订《住房公积金管理条例》，旨在优化住房消费支持功能，直接改变房地产行业的融资约束和居民购房需求。此措施主要影响房地产行业的供需环境，未直接改变全市场流动性或系统性风格因子。</td>
+        </tr>
+        <tr>
+          <td class="num">34</td>
+          <td class="nowrap">2026-07-31</td>
+          <td class="nowrap">综合政策</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3143231">我国新核准8台核电机组，项目总投资超1700亿元</a></td>
+          <td class="nowrap">M001</td>
+          <td>国务院常务会议核准辽宁庄河、浙江金七门、广东太平岭、山东莱阳四个核电项目（共8台机组）</td>
+          <td>当天召开的国务院常务会议决定核准辽宁庄河一期工程等四个核电项目。此次在国常会上获批的新项目包括浙江金七门核电二期工程（3、4号机组），广东太平岭核电三期工程（5、6号机组），辽宁庄河核电一期工程（1、2号机组），山东莱阳核电一期工程（1、2号机组），共计8台新机组。</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>电力设备|公用事业</td>
+          <td class="num">0.95</td>
+          <td>国务院核准新建核电机组直接增加电力设备（核电设备）的订单需求，并提升公用事业（核电运营）的长期装机规模与现金流预期。该政策针对特定行业项目审批，不直接改变全市场流动性或系统性风险环境，亦未引发跨风格因子的系统性重估。</td>
+        </tr>
+        <tr>
+          <td class="num">35</td>
+          <td class="nowrap">2026-07-31</td>
+          <td class="nowrap">科技与制造</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3143349">欧盟宣布扩大实施《人工智能法》</a></td>
+          <td class="nowrap">M001</td>
+          <td>欧盟扩大《人工智能法》适用范围，强制交互式AI系统告知用户其非人类身份，并对深度伪造内容实施标识和机器可读标记要求。</td>
+          <td>欧盟将自8月2日起扩大《人工智能法》适用范围，开始执行透明度规则和针对通用人工智能模型提供商的相关规则等</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>计算机|传媒</td>
+          <td class="num">0.9</td>
+          <td>欧盟《人工智能法》扩大适用范围直接约束通用人工智能模型提供商及交互式系统，涉及计算机与传媒行业的合规成本、产品披露及技术架构调整。该政策针对特定行业的技术运营规范，不直接改变A股全市场流动性或系统性风格因子。</td>
+        </tr>
+        <tr>
+          <td class="num">36</td>
+          <td class="nowrap">2026-07-31</td>
+          <td class="nowrap">资本市场制度</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3143161">证监会对广发证券股份有限公司采取出具警示函措施</a></td>
+          <td class="nowrap">M001</td>
+          <td>证监会对广发证券采取出具警示函的行政监督管理措施</td>
+          <td>证监会决定对公司采取出具警示函的行政监督管理措施</td>
+          <td class="nowrap"><span class="route-tag none">不路由</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td class="num">0.95</td>
+          <td>该措施仅针对广发证券一家特定机构，属于个案监管，未改变全市场共同定价环境，也未系统性影响风格因子或行业供需。</td>
+        </tr>
+        <tr>
+          <td class="num">37</td>
+          <td class="nowrap">2026-08-03</td>
+          <td class="nowrap">能源与环保</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3144035">两部门：推动现役煤电机组实施宽负荷高效改造，低负荷运行工况的煤耗增幅控制在25%以内</a></td>
+          <td class="nowrap">M001</td>
+          <td>推动现役煤电机组实施宽负荷高效改造，控制低负荷煤耗增幅</td>
+          <td>推动现役煤电机组实施宽负荷高效改造，低负荷运行工况的煤耗增幅控制在25%以内</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>电力设备|公用事业</td>
+          <td class="num">0.95</td>
+          <td>该政策直接针对现役煤电机组的宽负荷高效改造及运行工况提出具体技术指标，直接改变电力设备行业的技术需求与供给约束，并影响公用事业（电力）行业的运营成本与产能利用效率。</td>
+        </tr>
+        <tr>
+          <td class="num">37</td>
+          <td class="nowrap">2026-08-03</td>
+          <td class="nowrap">能源与环保</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3144035">两部门：推动现役煤电机组实施宽负荷高效改造，低负荷运行工况的煤耗增幅控制在25%以内</a></td>
+          <td class="nowrap">M002</td>
+          <td>因地制宜推动燃煤机组全负荷脱硝改造</td>
+          <td>因地制宜推动实施燃煤机组全负荷脱硝改造</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>电力设备|公用事业</td>
+          <td class="num">0.9</td>
+          <td>该政策直接针对燃煤机组的脱硝改造与运行工况优化，明确影响电力设备制造商的订单需求及公用事业板块中火电企业的运营成本与合规约束。</td>
+        </tr>
+        <tr>
+          <td class="num">37</td>
+          <td class="nowrap">2026-08-03</td>
+          <td class="nowrap">能源与环保</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3144035">两部门：推动现役煤电机组实施宽负荷高效改造，低负荷运行工况的煤耗增幅控制在25%以内</a></td>
+          <td class="nowrap">M003</td>
+          <td>实施一批60万千瓦等级跨代升级改造项目</td>
+          <td>实施一批60万千瓦等级跨代升级改造项目</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>电力设备|公用事业</td>
+          <td class="num">0.9</td>
+          <td>该政策直接针对煤电机组的跨代升级改造，直接增加电力设备（如锅炉、汽轮机、控制系统等）的更新改造需求。同时，改造后的机组将改变电力行业的供给结构与运营成本，直接影响公用事业板块的盈利预期。</td>
+        </tr>
+        <tr>
+          <td class="num">37</td>
+          <td class="nowrap">2026-08-03</td>
+          <td class="nowrap">能源与环保</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3144035">两部门：推动现役煤电机组实施宽负荷高效改造，低负荷运行工况的煤耗增幅控制在25%以内</a></td>
+          <td class="nowrap">M004</td>
+          <td>在具备条件的地区改造建设零碳低碳燃料掺烧和碳捕集利用及封存项目</td>
+          <td>在具备条件的地区改造建设一批零碳低碳燃料掺烧和碳捕集利用及封存项目</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>电力设备|公用事业</td>
+          <td class="num">0.9</td>
+          <td>该政策直接针对煤电机组的宽负荷改造及碳捕集技术应用，直接改变电力设备行业的技术需求与供给，并影响公用事业（电力）行业的成本结构与产能约束。</td>
+        </tr>
+        <tr>
+          <td class="num">37</td>
+          <td class="nowrap">2026-08-03</td>
+          <td class="nowrap">能源与环保</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3144035">两部门：推动现役煤电机组实施宽负荷高效改造，低负荷运行工况的煤耗增幅控制在25%以内</a></td>
+          <td class="nowrap">M005</td>
+          <td>制定煤电与新能源融合发展政策，支持优先实施融合项目并实施调节能力改造</td>
+          <td>制定煤电与新能源融合发展政策，支持在具备条件的地区优先实施一批煤电与新能源融合项目，实施煤电调节能力改造，推动煤电与新能源系统耦合集成，实现一体化调控送出，降低燃煤发电量</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>电力设备|公用事业</td>
+          <td class="num">0.9</td>
+          <td>该政策直接针对煤电与新能源融合项目及调节能力改造，明确涉及电力设备（改造设备）和公用事业（煤电运营）行业的供给与技术约束。政策通过推动系统耦合和降低燃煤发电量，直接改变这两个行业的需求结构和成本逻辑。</td>
+        </tr>
+        <tr>
+          <td class="num">38</td>
+          <td class="nowrap">2026-07-27</td>
+          <td class="nowrap">综合政策</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3140154">工业和信息化部印发《“小快轻准”数字化产品和服务培育指引（2026年版）》</a></td>
+          <td class="nowrap">M001</td>
+          <td>工信部印发指引，引导数字化产品向小型化、快速化、轻量化、精准化方向深耕，以优质供给推动中小企业转型。</td>
+          <td>引导产品在小型化、快速化、轻量化、精准化等维度持续深耕，以优质供给推动中小企业主动转型、愿转敢转。</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>计算机|电子</td>
+          <td class="num">0.9</td>
+          <td>该指引直接针对数字化产品与服务，明确指向计算机和电子行业的供给端优化与产品形态升级。政策通过引导产品向小型化、轻量化等维度发展，直接改变相关行业的供给结构和技术路径，而非全市场流动性或风格因子。</td>
+        </tr>
+        <tr>
+          <td class="num">38</td>
+          <td class="nowrap">2026-07-27</td>
+          <td class="nowrap">综合政策</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3140154">工业和信息化部印发《“小快轻准”数字化产品和服务培育指引（2026年版）》</a></td>
+          <td class="nowrap">M002</td>
+          <td>鼓励地方建立分类分级培育体系，细化培育标准，推动“小快轻准”数字化产品和服务持续迭代优化。</td>
+          <td>鼓励地方立足重点行业中小企业数字化转型实际情况，因地制宜细化培育标准，建立分类分级培育体系，推动“小快轻准”数字化产品和服务持续迭代优化。</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>计算机|电子</td>
+          <td class="num">0.9</td>
+          <td>该政策直接针对数字化产品和服务的培育，明确指向计算机和电子行业中的中小企业，旨在推动其数字化转型和产品迭代。政策通过建立分类分级体系影响特定行业的需求与供给，未涉及全市场流动性或系统性风格因子。</td>
+        </tr>
+        <tr>
+          <td class="num">38</td>
+          <td class="nowrap">2026-07-27</td>
+          <td class="nowrap">综合政策</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3140154">工业和信息化部印发《“小快轻准”数字化产品和服务培育指引（2026年版）》</a></td>
+          <td class="nowrap">M003</td>
+          <td>加强政策协同和资源统筹，加快构建多方参与、优势互补的中小企业数字化转型服务供给生态。</td>
+          <td>加强政策协同和资源统筹，加快构建多方参与、优势互补的中小企业数字化转型服务供给生态。</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>计算机|电子</td>
+          <td class="num">0.9</td>
+          <td>该政策直接针对中小企业数字化转型服务供给生态，明确利好提供数字化产品与服务的计算机及电子行业企业。政策通过构建服务生态直接改变相关行业的供给结构和市场需求，不涉及全市场共同定价环境或系统性风格因子变化。</td>
+        </tr>
+        <tr>
+          <td class="num">39</td>
+          <td class="nowrap">2026-07-31</td>
+          <td class="nowrap">贸易与外部冲击</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3143016">商务部：延长对原产于加拿大的进口豌豆淀粉反倾销调查期限</a></td>
+          <td class="nowrap">M001</td>
+          <td>延长对原产于加拿大的进口豌豆淀粉反倾销调查期限至2027年2月12日。</td>
+          <td>商务部决定将本案调查期延长至2027年2月12日</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>农林牧渔</td>
+          <td class="num">0.95</td>
+          <td>该政策直接针对加拿大进口豌豆淀粉的反倾销调查，直接影响国内豌豆淀粉及相关农产品的进口供给与价格成本，属于对农林牧渔行业的直接监管约束。</td>
+        </tr>
+        <tr>
+          <td class="num">40</td>
+          <td class="nowrap">2026-08-03</td>
+          <td class="nowrap">财政与税收</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3143731">法国总理办公室针对外国投资制度发布声明：法国收紧关于非欧洲实体持股法国公司的制度。 非欧洲投资者若取得法国企业10%及以上股权，必须获得法国</a></td>
+          <td class="nowrap">M001</td>
+          <td>非欧洲投资者取得法国企业10%及以上股权须获法国财政部批准</td>
+          <td>非欧洲投资者若取得法国企业10%及以上股权，必须获得法国财政部批准</td>
+          <td class="nowrap"><span class="route-tag none">不路由</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td class="num">0.95</td>
+          <td>该政策仅针对非欧洲实体投资法国企业的限制，属于法国国内监管措施，不直接改变A股全市场流动性、交易制度或系统性风险环境。同时，该政策未直接作用于A股特定行业的需求、供给或成本，也未引发A股内部风格因子的系统性相对差异。</td>
+        </tr>
+        <tr>
+          <td class="num">41</td>
+          <td class="nowrap">2026-07-27</td>
+          <td class="nowrap">房地产</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3140395">住建部：进一步加强城市桥梁安全管理工作</a></td>
+          <td class="nowrap">M001</td>
+          <td>加强城市桥梁主管部门与气象、水利、自然资源等部门的协同联动，开展极端天气及地质灾害风险提示与防范应对。</td>
+          <td>城市桥梁主管部门要加强与气象、水利、自然资源等部门协同联动，扎实做好极端天气以及涉水、涉地质灾害等风险提示及防范应对工作。</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>建筑装饰</td>
+          <td class="num">0.9</td>
+          <td>该政策直接针对城市桥梁这一基础设施的维护与管理，属于建筑装饰行业中的基础设施建设与维护范畴。政策要求加强跨部门协同以应对极端天气和地质灾害，直接改变了该细分领域的运营规范、成本结构及监管约束。</td>
+        </tr>
+        <tr>
+          <td class="num">41</td>
+          <td class="nowrap">2026-07-27</td>
+          <td class="nowrap">房地产</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3140395">住建部：进一步加强城市桥梁安全管理工作</a></td>
+          <td class="nowrap">M002</td>
+          <td>全面开展桥梁基础冲刷、边坡稳定和排水设施等防汛安全风险隐患排查。</td>
+          <td>重点聚焦桥梁基础冲刷、边坡稳定和畅通排水设施等，全面开展防汛安全风险隐患排查。</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>建筑装饰|建筑材料</td>
+          <td class="num">0.9</td>
+          <td>该政策直接针对城市桥梁基础设施的安全隐患排查，涉及建筑施工（建筑装饰）及水泥、钢材等原材料需求（建筑材料）。其传导机制为通过监管要求提升特定基建领域的维护与建设标准，直接影响相关行业的业务活动与成本结构。</td>
+        </tr>
+        <tr>
+          <td class="num">41</td>
+          <td class="nowrap">2026-07-27</td>
+          <td class="nowrap">房地产</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3140395">住建部：进一步加强城市桥梁安全管理工作</a></td>
+          <td class="nowrap">M003</td>
+          <td>协调河道管理部门清理河道堆积物及影响桥梁安全的大型漂流物，确保行洪畅通。</td>
+          <td>主动协调河道管理部门，及时清理河道内堆积物及可能影响桥梁安全的大型漂流物，确保行洪畅通。</td>
+          <td class="nowrap"><span class="route-tag none">不路由</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td class="num">0.95</td>
+          <td>该措施属于城市基础设施运维的具体执行动作，旨在保障局部桥梁安全，不直接改变全市场流动性、交易制度或系统性风险环境。同时，该操作未对特定行业的供需、成本或产能产生普遍性影响，也不涉及股票风格因子的系统性重估。</td>
+        </tr>
+        <tr>
+          <td class="num">41</td>
+          <td class="nowrap">2026-07-27</td>
+          <td class="nowrap">房地产</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3140395">住建部：进一步加强城市桥梁安全管理工作</a></td>
+          <td class="nowrap">M004</td>
+          <td>在强降雨期间加密桥梁巡检频次，发现问题及时处置。</td>
+          <td>强降雨期间，加密巡检频次，发现问题及时处置。</td>
+          <td class="nowrap"><span class="route-tag none">不路由</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td class="num">0.95</td>
+          <td>该措施属于针对特定基础设施（城市桥梁）的运营安全维护指令，旨在防范局部风险，不直接改变全市场流动性、交易制度或系统性风险定价环境。同时，该操作未对建筑装饰、建筑材料等行业的供需、成本或产能产生普遍性影响，也不涉及股票风格因子的系统性重估。</td>
+        </tr>
+        <tr>
+          <td class="num">41</td>
+          <td class="nowrap">2026-07-27</td>
+          <td class="nowrap">房地产</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3140395">住建部：进一步加强城市桥梁安全管理工作</a></td>
+          <td class="nowrap">M005</td>
+          <td>降雨结束后排查桥梁受损情况，修复受损设施，总结防汛经验并完善应急预案。</td>
+          <td>降雨结束后，及时排查桥梁受损情况，尽快修复受损设施，总结防汛经验，完善应急预案。</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>建筑装饰|建筑材料|公用事业</td>
+          <td class="num">0.85</td>
+          <td>该政策直接针对城市桥梁设施的修复与应急能力提升，直接增加建筑装饰（施工修复）和建筑材料（修复材料）的需求，并涉及公用事业（市政设施运营）的维护支出。</td>
+        </tr>
+        <tr>
+          <td class="num">42</td>
+          <td class="nowrap">2026-07-30</td>
+          <td class="nowrap">消费与民生</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3141822">美联储今年连续五次按兵不动，决议声明称：洛根等三人倾向于加息</a></td>
+          <td class="nowrap">M001</td>
+          <td>维持联邦基金利率目标区间在3.5%-3.75%不变</td>
+          <td>委员会决定将联邦基金利率的目标区间维持在3.5%-3.75%不变</td>
+          <td class="nowrap"><span class="route-tag all-a">全A</span><span class="route-tag style">风格</span></td>
+          <td>value_growth|liquidity</td>
+          <td>—</td>
+          <td class="num">0.9</td>
+          <td>美联储维持利率不变直接改变全球流动性与无风险利率环境，影响A股全市场估值定价（all_a）。利率高位维持使得长久期成长股与高股息价值股的估值相对差异显著，同时影响市场流动性偏好（style）。</td>
+        </tr>
+        <tr>
+          <td class="num">42</td>
+          <td class="nowrap">2026-07-30</td>
+          <td class="nowrap">消费与民生</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3141822">美联储今年连续五次按兵不动，决议声明称：洛根等三人倾向于加息</a></td>
+          <td class="nowrap">M002</td>
+          <td>继续执行在银行体系中维持充裕准备金的政策</td>
+          <td>委员会将继续执行在银行体系中维持充裕准备金的政策</td>
+          <td class="nowrap"><span class="route-tag all-a">全A</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td class="num">0.9</td>
+          <td>美联储维持充裕准备金政策直接决定全球美元流动性环境，通过汇率、无风险利率及风险偏好传导至A股全市场共同定价。该政策属于能够经全球流动性传导至A股共同定价环境的正式货币政策决定。</td>
+        </tr>
+        <tr>
+          <td class="num">43</td>
+          <td class="nowrap">2026-07-30</td>
+          <td class="nowrap">科技与制造</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3142350">工信部：废止和修订新能源汽车废旧动力电池“梯次利用”相关政策标准</a></td>
+          <td class="nowrap">M001</td>
+          <td>废止《新能源汽车废旧动力电池综合利用行业规范条件》中“梯次利用”有关条款，停止开展“梯次利用”企业公告管理，并将已公告企业移出规范条件名单。</td>
+          <td>废止《新能源汽车废旧动力电池综合利用行业规范条件》中“梯次利用”有关条款，不再开展“梯次利用”企业公告管理，将已公告的“梯次利用”企业移出符合新能源汽车废旧动力电池综合利用行业规范条件的企业名单</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>汽车|电力设备</td>
+          <td class="num">0.95</td>
+          <td>该政策直接废止并修订新能源汽车废旧动力电池“梯次利用”的行业规范条件，取消相关企业的公告管理资格，直接改变汽车及电力设备（电池回收）行业的供给约束与合规环境。</td>
+        </tr>
+        <tr>
+          <td class="num">43</td>
+          <td class="nowrap">2026-07-30</td>
+          <td class="nowrap">科技与制造</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3142350">工信部：废止和修订新能源汽车废旧动力电池“梯次利用”相关政策标准</a></td>
+          <td class="nowrap">M002</td>
+          <td>确认已公告的再生利用企业名单继续有效，维持其规范条件资格。</td>
+          <td>已公告的再生利用企业名单继续有效</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>汽车</td>
+          <td class="num">0.9</td>
+          <td>该政策直接针对新能源汽车废旧动力电池的梯次利用行业规范，明确维持已公告企业的资格，直接改变该细分领域的供给约束和监管环境。</td>
+        </tr>
+        <tr>
+          <td class="num">44</td>
+          <td class="nowrap">2026-07-24</td>
+          <td class="nowrap">综合政策</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3139444">交通运输部、国家发展改革委联合印发《关于深化综合交通运输体系改革的意见》</a></td>
+          <td class="nowrap">M001</td>
+          <td>强化综合交通运输规划统筹，加强跨部门协同并完善规划管理制度</td>
+          <td>强化综合交通运输规划统筹。加强综合交通运输规划编制跨部门协同。建立完善综合交通运输规划管理制度。</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>交通运输</td>
+          <td class="num">0.9</td>
+          <td>该政策直接针对综合交通运输体系的规划编制与管理进行制度优化，直接改变交通运输行业的供给约束和运营环境。政策未涉及全市场流动性、交易成本或系统性风险，也未明确指向大小盘或价值成长等风格因子的相对变化。</td>
+        </tr>
+        <tr>
+          <td class="num">44</td>
+          <td class="nowrap">2026-07-24</td>
+          <td class="nowrap">综合政策</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3139444">交通运输部、国家发展改革委联合印发《关于深化综合交通运输体系改革的意见》</a></td>
+          <td class="nowrap">M002</td>
+          <td>强化综合交通运输规划与国家发展规划、区域规划及国土空间规划的衔接</td>
+          <td>强化综合交通运输规划与国家发展规划和其他国家级专项规划、区域规划的衔接，发挥国土空间规划指导约束作用，落实生态环境分区管控制度和环境影响评价制度。</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>交通运输|公用事业|建筑装饰</td>
+          <td class="num">0.85</td>
+          <td>该政策直接规范交通运输、公用事业及建筑行业的规划衔接与生态约束，改变相关行业的供给约束和长期投资方向。其传导机制聚焦于特定行业的规划落地与合规要求，不直接改变全市场流动性或系统性风格因子。</td>
+        </tr>
+        <tr>
+          <td class="num">44</td>
+          <td class="nowrap">2026-07-24</td>
+          <td class="nowrap">综合政策</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3139444">交通运输部、国家发展改革委联合印发《关于深化综合交通运输体系改革的意见》</a></td>
+          <td class="nowrap">M003</td>
+          <td>加强铁路、公路、水路、民航、邮政等规划与综合交通运输规划的全过程衔接</td>
+          <td>加强铁路、公路、水路、民航、邮政等规划与综合交通运输规划的全过程衔接。</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>交通运输</td>
+          <td class="num">0.95</td>
+          <td>该政策直接针对铁路、公路、水路、民航、邮政等交通领域的规划衔接，属于对交通运输行业的直接供给与规划约束调整，不直接改变全市场流动性或系统性风险，也未明确指向特定风格因子的相对变化。</td>
+        </tr>
+        <tr>
+          <td class="num">45</td>
+          <td class="nowrap">2026-08-03</td>
+          <td class="nowrap">能源与环保</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3144031">两部门：到2030年，生物质、光热、地热能、海洋能等发电装机达到6500万千瓦左右</a></td>
+          <td class="nowrap">M001</td>
+          <td>设定2030年生物质、光热、地热能、海洋能等发电装机总目标为6500万千瓦左右</td>
+          <td>到2030年，生物质、光热、地热能、海洋能等发电装机达到6500万千瓦左右</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>电力设备|公用事业</td>
+          <td class="num">0.95</td>
+          <td>该政策直接设定了生物质、光热、地热能及海洋能等特定发电技术的装机规模目标，将直接引导相关领域的投资与建设需求。这些技术主要涉及电力设备制造业及公用事业运营板块，属于明确的行业供给侧规划。</td>
+        </tr>
+        <tr>
+          <td class="num">45</td>
+          <td class="nowrap">2026-08-03</td>
+          <td class="nowrap">能源与环保</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3144031">两部门：到2030年，生物质、光热、地热能、海洋能等发电装机达到6500万千瓦左右</a></td>
+          <td class="nowrap">M002</td>
+          <td>推动光热发电规模化发展</td>
+          <td>推动光热发电规模化发展</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>电力设备</td>
+          <td class="num">0.95</td>
+          <td>该政策直接针对光热发电等特定发电技术的规模化发展，明确指向电力设备行业的需求与产能扩张。政策未涉及全市场流动性或系统性制度变化，也未明确导致不同风格因子（如大小盘、价值成长）的相对差异。</td>
+        </tr>
+        <tr>
+          <td class="num">45</td>
+          <td class="nowrap">2026-08-03</td>
+          <td class="nowrap">能源与环保</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3144031">两部门：到2030年，生物质、光热、地热能、海洋能等发电装机达到6500万千瓦左右</a></td>
+          <td class="nowrap">M003</td>
+          <td>因地制宜发展生物质和地热能发电</td>
+          <td>因地制宜发展生物质和地热能发电</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>电力设备|公用事业</td>
+          <td class="num">0.95</td>
+          <td>该政策直接针对生物质、光热、地热能等特定发电技术的装机目标，明确增加了电力设备（如相关发电设备）和公用事业（如绿色电力运营商）的需求与建设约束。</td>
+        </tr>
+        <tr>
+          <td class="num">45</td>
+          <td class="nowrap">2026-08-03</td>
+          <td class="nowrap">能源与环保</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3144031">两部门：到2030年，生物质、光热、地热能、海洋能等发电装机达到6500万千瓦左右</a></td>
+          <td class="nowrap">M004</td>
+          <td>推进海洋能规模化利用</td>
+          <td>推进海洋能规模化利用</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>电力设备</td>
+          <td class="num">0.95</td>
+          <td>该政策直接针对海洋能发电装机目标，明确指向电力设备行业中的新能源装备需求增长。政策通过推动特定能源形式的规模化利用，直接改变该细分领域的供给扩张预期，不涉及全市场流动性或风格因子变化。</td>
+        </tr>
+        <tr>
+          <td class="num">46</td>
+          <td class="nowrap">2026-07-24</td>
+          <td class="nowrap">房地产</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3139413">住房城乡建设部：进一步加强建筑市场监管</a></td>
+          <td class="nowrap">M001</td>
+          <td>住房城乡建设部印发通知，对建筑市场准入管理、建筑工程评标定标、建筑工程发包承包等方面提出具体要求。</td>
+          <td>住房城乡建设部近日印发通知，对建筑市场准入管理、建筑工程评标定标、建筑工程发包承包等方面工作提出具体要求</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>建筑装饰|建筑材料|房地产</td>
+          <td class="num">0.9</td>
+          <td>该政策直接针对建筑市场准入、评标及发包承包环节进行监管规范，直接影响建筑装饰、建筑材料及房地产行业的运营环境与竞争格局。</td>
+        </tr>
+        <tr>
+          <td class="num">47</td>
+          <td class="nowrap">2026-07-24</td>
+          <td class="nowrap">财政与税收</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3139337">两部门：居民个人装入财产的离岸信托存续期间产生的收益 适用20%税率</a></td>
+          <td class="nowrap">M001</td>
+          <td>对居民个人离岸信托存续期间产生的收益征收个人所得税，税率为20%。</td>
+          <td>居民个人装入财产的离岸信托存续期间产生的收益 适用20%税率</td>
+          <td class="nowrap"><span class="route-tag none">不路由</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td class="num">0.95</td>
+          <td>该政策针对居民个人离岸信托收益征收个税，属于针对特定投资工具持有人的税收征管措施，不直接改变A股全市场流动性、交易制度或系统性风险环境。同时，该政策未直接调整任何A股行业的供需、成本或监管约束，也未明确导致A股内部不同风格因子（如大小盘、价值成长）产生系统性相对差异。</td>
+        </tr>
+        <tr>
+          <td class="num">48</td>
+          <td class="nowrap">2026-07-28</td>
+          <td class="nowrap">房地产</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3140784">住建部：扎实做好国债支持老旧小区加装电梯项目组织实施</a></td>
+          <td class="nowrap">M001</td>
+          <td>组织实施超长期特别国债资金支持住宅老旧电梯更新和老旧小区加装电梯项目</td>
+          <td>住房城乡建设部城市建设司召开超长期特别国债资金支持住宅老旧电梯更新和老旧小区加装电梯工作视频会议</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>建筑装饰|机械设备</td>
+          <td class="num">0.9</td>
+          <td>该政策通过超长期特别国债资金直接支持老旧小区加装电梯及更新项目，直接增加建筑装饰（施工改造）和机械设备（电梯制造）行业的订单需求。此政策针对特定细分领域，不改变全市场流动性或系统性风险环境，也不直接导致全市场风格因子的相对变化。</td>
+        </tr>
+        <tr>
+          <td class="num">49</td>
+          <td class="nowrap">2026-07-22</td>
+          <td class="nowrap">消费与民生</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3138056">财政部：上半年下达育儿补贴资金约1000亿元</a></td>
+          <td class="nowrap">M001</td>
+          <td>上半年下达育儿补贴资金约1000亿元，用于降低家庭生育养育成本。</td>
+          <td>下达育儿补贴资金约1000亿元、学前一年免保育教育费补助资金241亿元，降低家庭生育养育成本</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>社会服务|商贸零售|医药生物</td>
+          <td class="num">0.85</td>
+          <td>育儿补贴资金直接增加家庭在托育、母婴及儿童消费领域的可支配收入，直接提升社会服务、商贸零售及医药生物等行业的需求。该政策通过财政转移支付改变特定行业的消费端需求，而非改变全市场流动性或系统性估值因子。</td>
+        </tr>
+        <tr>
+          <td class="num">49</td>
+          <td class="nowrap">2026-07-22</td>
+          <td class="nowrap">消费与民生</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3138056">财政部：上半年下达育儿补贴资金约1000亿元</a></td>
+          <td class="nowrap">M002</td>
+          <td>上半年下达基本养老保险补助资金1.2万亿元，支持地方按时足额发放养老金。</td>
+          <td>下达基本养老保险补助资金1.2万亿元，支持地方按时足额发放养老金</td>
+          <td class="nowrap"><span class="route-tag none">不路由</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td class="num">0.95</td>
+          <td>该政策属于针对特定民生领域的财政补助，旨在保障养老金按时发放，未直接改变全市场流动性、交易制度或系统性风险定价环境。政策未对特定行业的需求、供给或成本产生直接冲击，也未引发大小盘、价值成长等风格因子的系统性相对差异。</td>
+        </tr>
+        <tr>
+          <td class="num">49</td>
+          <td class="nowrap">2026-07-22</td>
+          <td class="nowrap">消费与民生</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3138056">财政部：上半年下达育儿补贴资金约1000亿元</a></td>
+          <td class="nowrap">M003</td>
+          <td>上半年下达城乡居民基本医疗保险补助资金3864亿元，巩固参保率和保障水平。</td>
+          <td>下达城乡居民基本医疗保险补助资金3864亿元，巩固基本医疗保险参保率和保障水平</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>医药生物</td>
+          <td class="num">0.9</td>
+          <td>该政策直接增加对城乡居民基本医疗保险的财政补助，直接改变医药生物行业中医疗服务供给端的需求与支付能力。此措施针对特定行业（医保相关医疗服务）的预算约束和运营环境，不直接改变全市场流动性或系统性风格因子。</td>
+        </tr>
+        <tr>
+          <td class="num">50</td>
+          <td class="nowrap">2026-07-27</td>
+          <td class="nowrap">科技与制造</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3140376">国务院国资委：将深入推进央企“AI+”专项行动，加快算力基础设施建设</a></td>
+          <td class="nowrap">M001</td>
+          <td>发布第二批央企人工智能战略性高价值场景和行业高质量数据集</td>
+          <td>正式发布第二批央企人工智能战略性高价值场景和行业高质量数据集</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>计算机|电子|通信</td>
+          <td class="num">0.9</td>
+          <td>该政策直接针对央企人工智能领域的场景落地与数据建设，将直接增加对算力基础设施、AI 算法及数据服务的需求。主要受益行业为计算机（AI 应用与算力）、电子（算力硬件）和通信（数据传输与网络）。</td>
+        </tr>
+        <tr>
+          <td class="num">50</td>
+          <td class="nowrap">2026-07-27</td>
+          <td class="nowrap">科技与制造</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3140376">国务院国资委：将深入推进央企“AI+”专项行动，加快算力基础设施建设</a></td>
+          <td class="nowrap">M002</td>
+          <td>上线AI开源“焕新社区”2.0</td>
+          <td>上线AI开源“焕新社区”2.0</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>计算机|通信|电子</td>
+          <td class="num">0.9</td>
+          <td>该政策直接针对AI算力基础设施及开源生态建设，将直接增加计算机、通信及电子行业对算力硬件、软件平台及基础设施的需求。此措施属于特定产业的技术与供给端推动，不直接改变全市场流动性或系统性风格因子。</td>
+        </tr>
+        <tr>
+          <td class="num">50</td>
+          <td class="nowrap">2026-07-27</td>
+          <td class="nowrap">科技与制造</td>
+          <td class="title-cell"><a href="https://wallstreetcn.com/livenews/3140376">国务院国资委：将深入推进央企“AI+”专项行动，加快算力基础设施建设</a></td>
+          <td class="nowrap">M003</td>
+          <td>启动国资央企智能软件工厂联合筑基工程</td>
+          <td>启动国资央企智能软件工厂联合筑基工程</td>
+          <td class="nowrap"><span class="route-tag industry">行业</span></td>
+          <td>—</td>
+          <td>计算机|通信</td>
+          <td class="num">0.9</td>
+          <td>该政策直接针对国资央企的AI与算力基础设施建设，明确提升智能软件研发能力，直接增加计算机（软件/算力）和通信（基础设施）行业的订单需求与供给约束。</td>
+        </tr></tbody>
+    </table>
+  </div>
+
+  <h2>五、当前判断</h2>
+  <div class="judgement">
+    <article><h3>已经解决</h3><p>流程完整、输出稳定；measure可回查原文；行业标签口径统一；可直接进入人工标注。</p></article>
+    <article><h3>仍需人工确认</h3><p>跨境政策是否真的传导到A股、风格标签是否存在后验解释、复杂会议是否仍有漏拆或合并过度。</p></article>
+    <article><h3>下一步</h3><p>对105条measure填写人工真值，分别计算全A、风格、行业的precision、recall和F1，再决定下一版prompt。</p></article>
+  </div>
+  <div class="foot">说明：模型置信度集中在0.85—0.95，尚未校准，不能解释为真实正确概率；本次结果是初步实验 baseline，不直接形成投资结论。</div>
+</main>
+</body></html>

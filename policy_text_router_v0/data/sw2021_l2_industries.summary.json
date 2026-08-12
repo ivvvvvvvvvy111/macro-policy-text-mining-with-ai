@@ -1,0 +1,10 @@
+{
+  "classification_version": "SW2021",
+  "level": "L2",
+  "retrieved_count": 131,
+  "standard_reference_count": 134,
+  "is_reference_count_complete": false,
+  "note": "公开接口可能只返回当前存在数据的行业。程序保留完整性告警，正式生产前应使用公司持有的申万授权字典进行最终核对。",
+  "generated_at": "2026-08-08T02:32:11.463035+00:00",
+  "output": "C:\\Users\\CHENWEIHAO\\Documents\\Codex\\2026-08-06\\referenced-chatgpt-conversation-this-is-an\\outputs\\policy_text_router_v0\\data\\sw2021_l2_industries.csv"
+}

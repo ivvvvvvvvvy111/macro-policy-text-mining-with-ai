@@ -1,0 +1,23 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: policy-router-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-policy_router}
+      POSTGRES_USER: ${POSTGRES_USER:-policy_router}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me-before-production}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - policy_router_pgdata:/var/lib/postgresql/data
+      - ./sql/schema.sql:/docker-entrypoint-initdb.d/001-schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-policy_router} -d ${POSTGRES_DB:-policy_router}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  policy_router_pgdata:
+

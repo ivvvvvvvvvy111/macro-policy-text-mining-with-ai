@@ -1,0 +1,16 @@
+[project]
+name = "policy-text-router-v0"
+version = "0.1.0"
+description = "A minimal LLM pipeline for Chinese policy measure extraction and A-share research routing."
+requires-python = ">=3.10"
+dependencies = [
+  "openai>=2.0.0,<3.0.0",
+  "pydantic>=2.8.0,<3.0.0",
+  "python-dotenv>=1.0.1,<2.0.0",
+  "tqdm>=4.66.0,<5.0.0",
+  "pandas>=2.2.0,<3.0.0",
+  "matplotlib>=3.8.0,<4.0.0",
+  "jupyterlab>=4.0.0,<5.0.0",
+  "akshare>=1.17.0,<2.0.0",
+  "psycopg[binary]>=3.2.0,<4.0.0",
+]

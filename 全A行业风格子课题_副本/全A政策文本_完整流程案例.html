@@ -1,0 +1,1315 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src 'unsafe-inline' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data:; frame-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>All A Policy Pipeline</title>
+<style>:root{color-scheme:light dark;background:light-dark(rgb(255 255 255), rgb(24 24 24))}html,body{margin:0}body{box-sizing:border-box;padding:1rem;background:inherit}iframe{display:block;width:100%;max-width:736px;height:calc(100vh - 2rem);margin:0 auto;border:0}</style>
+</head>
+<body>
+<iframe sandbox="allow-scripts" referrerpolicy="no-referrer" title="All A Policy Pipeline" srcdoc="&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;meta name=&quot;referrer&quot; content=&quot;no-referrer&quot;&gt;
+&lt;meta http-equiv=&quot;Content-Security-Policy&quot; content=&quot;default-src &#x27;none&#x27;; script-src &#x27;unsafe-inline&#x27; &#x27;unsafe-eval&#x27; &#x27;wasm-unsafe-eval&#x27; blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src &#x27;unsafe-inline&#x27; blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data:; frame-src &#x27;none&#x27;; object-src &#x27;none&#x27;; base-uri &#x27;none&#x27;; form-action &#x27;none&#x27;&quot;&gt;
+&lt;title&gt;All A Policy Pipeline&lt;/title&gt;
+&lt;style&gt;:root {
+  color-scheme: light dark;
+  background-color: var(--background) !important;
+
+  /* Agent-facing contract; keep in sync with SKILL.md. */
+  --background: light-dark(rgb(255 255 255), rgb(24 24 24));
+  --foreground: light-dark(rgb(26 28 31), rgb(255 255 255));
+  --card: color-mix(in oklab, var(--foreground) 5%, transparent);
+  --card-foreground: var(--foreground);
+  --popover: light-dark(rgb(255 255 255), rgb(45 45 45));
+  --popover-foreground: var(--foreground);
+  --primary: light-dark(rgb(51 156 255), rgb(131 195 255));
+  --primary-foreground: light-dark(rgb(255 255 255), rgb(13 13 13));
+  --secondary: light-dark(rgb(255 255 255 / 96%), rgb(54 54 54 / 96%));
+  --secondary-foreground: var(--foreground);
+  --muted: color-mix(in srgb, var(--foreground) 10%, transparent);
+  --muted-foreground: light-dark(
+    rgb(26 28 31 / 49.4%),
+    rgb(255 255 255 / 49.8%)
+  );
+  --accent: light-dark(rgb(229 242 255), rgb(13 39 63));
+  --accent-foreground: var(--primary);
+  --destructive: light-dark(rgb(226 85 7), rgb(255 133 73));
+  --border: light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%));
+  --input: light-dark(
+    rgb(26 28 31 / 11.8%),
+    color-mix(in oklab, rgb(0 0 0) 10%, transparent)
+  );
+  --ring: light-dark(rgb(51 156 255), rgb(131 195 255 / 76%));
+  --font-size-base: 14px;
+  --viz-series-1: var(--primary);
+  --viz-series-2: light-dark(rgb(243 136 59), rgb(245 154 86));
+  --viz-series-3: light-dark(rgb(93 201 119), rgb(116 213 139));
+  --viz-series-4: light-dark(rgb(235 119 177), rgb(240 143 192));
+  --viz-series-5: light-dark(rgb(155 121 236), rgb(170 145 239));
+  --viz-series-6: light-dark(rgb(58 185 177), rgb(90 203 194));
+
+  /* Internal implementation variables; not part of the agent contract. */
+  --font-sans: -apple-system, system-ui, &quot;Segoe UI&quot;, sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, &quot;SF Mono&quot;, Menlo, Consolas, &quot;Liberation Mono&quot;,
+    monospace;
+  --font-size-normal: max(11px, var(--font-size-base));
+  --font-size-tooltip: calc(var(--font-size-base) - 1px);
+  --font-size-small: max(11px, calc(var(--font-size-base) - 2px));
+  --font-size-h1: calc(var(--font-size-normal) * 1.7142857143);
+  --font-size-h2: calc(var(--font-size-normal) * 1.4285714286);
+  --font-size-h3: calc(var(--font-size-normal) * 1.2857142857);
+  --font-weight-normal: 430;
+  --font-weight-medium: 500;
+  --line-height-normal: calc(var(--font-size-normal) * 1.5);
+  --line-height-tooltip: calc(var(--font-size-tooltip) * 1.4285714286);
+  --line-height-small: calc(var(--font-size-small) + 4px);
+  --radius: 12.5px;
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-2xl: calc(var(--radius) * 1.6);
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px -1px rgb(0 0 0 / 8%);
+  --checkmark-image: url(&quot;data:image/svg+xml,%3Csvg xmlns=&#x27;http://www.w3.org/2000/svg&#x27; viewBox=&#x27;0 0 17 17&#x27;%3E%3Cpath d=&#x27;M12.8961 3.64101C13.1297 3.41418 13.4984 3.37523 13.7779 3.56581C14.0571 3.75635 14.1554 4.11331 14.0299 4.41347L13.9615 4.53847L7.71151 13.7045C7.59411 13.8767 7.4063 13.9877 7.19881 14.0072C6.99136 14.0267 6.78564 13.9533 6.63826 13.806L2.88826 10.056L2.79842 9.9457C2.6192 9.67407 2.64927 9.30496 2.88826 9.06581C3.12738 8.82669 3.49647 8.79676 3.76815 8.97597L3.8785 9.06581L7.03084 12.2182L12.8053 3.74941L12.8961 3.64101Z&#x27;/%3E%3C/svg%3E&quot;);
+
+  /* Legacy aliases; not part of the current agent contract. */
+  --viz-bg: transparent;
+  --viz-panel: var(--card);
+  --viz-border: var(--border);
+  --viz-text: var(--foreground);
+  --viz-muted: var(--muted-foreground);
+  --viz-accent: var(--primary);
+  --viz-accent-text: var(--primary-foreground);
+  --viz-accent-bg: var(--accent);
+  --viz-font-size: var(--font-size-base);
+  --viz-warning: var(--destructive);
+  --color-background-primary: var(--background);
+  --color-text-primary: var(--foreground);
+  --color-border-secondary: var(--border);
+}
+
+:root[data-theme=&quot;light&quot;] {
+  color-scheme: light;
+}
+
+:root[data-theme=&quot;dark&quot;] {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html &gt; body {
+  margin: 0;
+  padding: 5px;
+  color: var(--foreground);
+  background: transparent !important;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+}
+
+a {
+  color: color-mix(in srgb, var(--viz-accent) 80%, var(--viz-text) 20%);
+  cursor: pointer;
+  font-weight: var(--viz-font-weight-medium);
+  text-decoration: none;
+  text-underline-offset: 2px;
+}
+
+a:is(:hover, :focus-visible) {
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-thickness: 0.5px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-block: 0;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.3;
+}
+
+b,
+strong,
+th {
+  font-weight: var(--font-weight-medium);
+}
+
+code:not(pre code) {
+  display: inline;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  corner-shape: superellipse(1.5);
+  background: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  overflow-wrap: anywhere;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  word-break: break-word;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--foreground);
+  font: inherit;
+  text-align: start;
+}
+
+.table :is(th, td) {
+  padding-block: 10px;
+  padding-inline: 0 24px;
+  overflow-wrap: anywhere;
+  border-bottom: 1px solid var(--border);
+  text-align: start;
+  vertical-align: top;
+}
+
+.table-responsive &gt; .table :is(th, td) {
+  overflow-wrap: break-word;
+}
+
+.table :is(th, td):last-child {
+  padding-inline-end: 0;
+}
+
+.table :is(caption, thead th) {
+  font-weight: 600;
+}
+
+.table thead th {
+  padding-block: 8px;
+  border-bottom-color: color-mix(in srgb, var(--foreground) 16%, transparent);
+}
+
+.table tbody tr:last-child :is(th, td) {
+  border-bottom: 0;
+}
+
+.table.table-sm :is(th, td) {
+  padding-block: 6px;
+}
+
+.table.table-sm :is(th, td):not(:last-child) {
+  padding-inline-end: 16px;
+}
+
+.table :is(.text-end, [align=&quot;right&quot;]) {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.table :is(.text-center, [align=&quot;center&quot;]) {
+  text-align: center;
+}
+
+.table .text-nowrap {
+  white-space: nowrap;
+}
+
+#widget {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  background: transparent !important;
+}
+
+.card {
+  min-width: 0;
+  padding: 12px;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  border-radius: var(--radius-2xl);
+  corner-shape: superellipse(1.5);
+  color: var(--card-foreground);
+  background: var(--card);
+}
+
+#widget &gt; :not(.card) {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.tooltip {
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  left: 0;
+  width: max-content;
+  max-width: min(
+    20rem,
+    var(--tooltip-available-width, calc(100vw - 10px)),
+    calc(100vw - 10px)
+  );
+  max-height: min(
+    var(--tooltip-available-height, calc(100vh - 10px)),
+    calc(100vh - 10px)
+  );
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  corner-shape: superellipse(1.5);
+  color: var(--popover-foreground);
+  background: var(--popover);
+  box-shadow: none;
+  font-size: var(--font-size-tooltip);
+  line-height: var(--line-height-tooltip);
+  overflow-wrap: break-word;
+  white-space: normal;
+  pointer-events: none;
+  user-select: none;
+}
+
+.viz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(max(180px, 24%), 1fr));
+  gap: 10px;
+}
+
+.viz-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.viz-stat-value {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+.viz-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.viz-badge {
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  color: var(--accent-foreground);
+  background: var(--accent);
+  font-weight: var(--font-weight-medium);
+}
+
+small,
+.text-small,
+.viz-badge {
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-small);
+}
+
+.text-muted {
+  color: var(--muted-foreground);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.viz-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.viz-controls &gt; .form-label {
+  display: grid;
+  min-width: min(100%, 260px);
+  flex: 1 1 280px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 2px 12px;
+  margin-bottom: 0;
+}
+
+.viz-controls &gt; .form-label &gt; :is(.form-control, .form-range, .form-select) {
+  grid-column: 1 / -1;
+}
+
+.btn,
+.form-check-input,
+.form-control,
+.form-range,
+.form-select {
+  font: inherit;
+}
+
+.btn {
+  appearance: button;
+  display: inline-flex;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0 8px;
+  -webkit-app-region: no-drag;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: superellipse(1.5);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: var(--cursor-interaction, pointer);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn:is(.btn-block, .viz-tile) {
+  inline-size: 100%;
+}
+
+.btn.viz-tile {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+a.btn {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn-primary {
+  border-color: transparent;
+  color: var(--primary-foreground);
+  background: var(--foreground);
+  background-clip: padding-box;
+}
+
+.btn-primary .text-muted {
+  color: color-mix(in srgb, var(--primary-foreground) 50%, transparent);
+}
+
+.btn-primary:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 80%, transparent);
+  background-clip: padding-box;
+}
+
+.btn-ghost {
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.btn-ghost:not(:disabled):hover {
+  color: var(--foreground);
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+[data-lucide] {
+  stroke-width: 1.6;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--foreground);
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  padding: 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: superellipse(1.5);
+  color: var(--foreground);
+  background: var(--secondary);
+}
+
+.form-control::placeholder {
+  color: var(--muted-foreground);
+}
+
+.form-control[type=&quot;file&quot;] {
+  padding: 0;
+  overflow: hidden;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control[type=&quot;file&quot;]::file-selector-button {
+  min-height: 26px;
+  margin-right: 8px;
+  padding: 0 8px;
+  border: 0;
+  border-right: 1px solid var(--input);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: inherit;
+  font: inherit;
+}
+
+.form-control[type=&quot;file&quot;]:not(:disabled):hover::file-selector-button {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-control-color[type=&quot;color&quot;] {
+  width: 40px;
+  height: 28px;
+  padding: 3px;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control-color[type=&quot;color&quot;]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.form-control-color[type=&quot;color&quot;]::-webkit-color-swatch {
+  border: 0;
+  border-radius: calc(var(--radius-lg) - 4px);
+  corner-shape: superellipse(1.5);
+}
+
+textarea.form-control {
+  height: auto;
+  min-height: 72px;
+  padding: 8px 10px;
+  resize: vertical;
+}
+
+.form-control:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-control:disabled,
+.form-select:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.form-select {
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  margin: 0;
+  padding: 0 32px 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: superellipse(1.5);
+  color: var(--foreground);
+  background-color: var(--secondary);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
+    linear-gradient(135deg, var(--muted-foreground) 50%, transparent 50%);
+  background-position:
+    calc(100% - 14px) 50%,
+    calc(100% - 10px) 50%;
+  background-repeat: no-repeat;
+  background-size: 4px 4px;
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-select:not(:disabled):hover {
+  background-color: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-select:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-check {
+  display: flex;
+  min-height: 20px;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-check-input {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  margin: 0;
+  border: 1px solid var(--input);
+  color: var(--primary-foreground);
+  background-color: transparent;
+  cursor: var(--cursor-interaction, default);
+  transition:
+    background-color 150ms,
+    border-color 150ms,
+    box-shadow 150ms;
+}
+
+.form-check:not(.form-switch) .form-check-input[type=&quot;checkbox&quot;] {
+  border-color: var(--input);
+  border-radius: var(--radius-sm);
+  corner-shape: superellipse(1.5);
+  background-color: var(--secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input:not(:disabled):not(:checked):hover {
+  background-color: var(--card);
+}
+
+.form-check:not(.form-switch) .form-check-input[type=&quot;checkbox&quot;]:checked {
+  border-color: var(--primary);
+  background-color: var(--primary);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input[type=&quot;checkbox&quot;]:checked::before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--primary-foreground);
+  content: &quot;&quot;;
+  mask: var(--checkmark-image) center / 12px 12px no-repeat;
+}
+
+.form-check-input[type=&quot;radio&quot;] {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-full);
+}
+
+.form-check-input[type=&quot;radio&quot;]:checked {
+  border: 2px solid var(--primary);
+  background:
+    radial-gradient(circle, var(--primary-foreground) 0 2.5px, transparent 3px),
+    var(--primary);
+}
+
+.form-check:not(.form-switch) .form-check-input:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+}
+
+.form-switch .form-check-input:disabled,
+.form-switch .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-check-label {
+  color: var(--foreground);
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-switch .form-check-input {
+  position: relative;
+  width: 32px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+  box-shadow: none;
+  transition: background-color 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input::before {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  border: 1px solid light-dark(var(--primary-foreground), var(--foreground));
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+  box-shadow: var(--shadow-sm);
+  content: &quot;&quot;;
+  transform: translate(2px, -50%);
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input:checked {
+  background: var(--primary);
+}
+
+.form-switch .form-check-input:checked::before {
+  transform: translate(14px, -50%);
+}
+
+.form-switch .form-check-input:focus-visible {
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+.form-range {
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 28px;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: 0;
+  accent-color: var(--primary);
+  background: linear-gradient(
+      color-mix(in srgb, var(--foreground) 7%, transparent),
+      color-mix(in srgb, var(--foreground) 7%, transparent)
+    )
+    center / 100% 2px no-repeat;
+}
+
+.form-range::-webkit-slider-runnable-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-webkit-slider-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range::-moz-range-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-moz-range-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.btn:not(.btn-primary, .viz-tile):is(
+    [aria-pressed=&quot;true&quot;],
+    [aria-selected=&quot;true&quot;],
+    .is-selected
+  ) {
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+  background: var(--primary);
+}
+
+.btn.viz-tile:is([aria-pressed=&quot;true&quot;], [aria-selected=&quot;true&quot;], .is-selected) {
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+#widget &gt; svg {
+  width: 100%;
+}
+
+.text-warning,
+.text-destructive {
+  color: var(--destructive);
+}
+
+html&gt;body{padding:0}&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;all-a-policy-pipeline&quot;&gt;
+  &lt;style&gt;
+    #all-a-policy-pipeline { color: var(--foreground); }
+    #all-a-policy-pipeline .legend { display: flex; flex-wrap: wrap; gap: 14px; margin: 4px 0 14px; color: var(--muted-foreground); }
+    #all-a-policy-pipeline .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; margin-right: 5px; }
+    #all-a-policy-pipeline .ai-dot { background: var(--viz-series-1); }
+    #all-a-policy-pipeline .rule-dot { background: var(--viz-series-2); }
+    #all-a-policy-pipeline .human-dot { background: var(--viz-series-3); }
+    #all-a-policy-pipeline .overview { display: grid; grid-template-columns: repeat(7, minmax(82px, 1fr)); gap: 6px; align-items: stretch; margin: 8px 0 18px; }
+    #all-a-policy-pipeline .overview-node { min-height: 68px; padding: 8px 6px; border-radius: 6px; background: color-mix(in srgb, var(--viz-series-1) 10%, transparent); display: flex; flex-direction: column; justify-content: center; text-align: center; }
+    #all-a-policy-pipeline .overview-node strong { font-weight: 500; }
+    #all-a-policy-pipeline .overview-arrow { display: none; color: var(--muted-foreground); text-align: center; }
+    #all-a-policy-pipeline .section { padding: 15px 0 12px; border-top: 1px solid var(--border); }
+    #all-a-policy-pipeline .section:first-of-type { border-top: 0; }
+    #all-a-policy-pipeline .section-head { display: grid; grid-template-columns: 42px minmax(0, 1fr) auto; gap: 10px; align-items: start; margin-bottom: 10px; }
+    #all-a-policy-pipeline .step-num { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--primary); color: var(--primary-foreground); font-weight: 500; }
+    #all-a-policy-pipeline .section-head h2 { margin: 0; }
+    #all-a-policy-pipeline .section-sub { color: var(--muted-foreground); margin-top: 2px; }
+    #all-a-policy-pipeline .owner { white-space: nowrap; }
+    #all-a-policy-pipeline .policy-text { margin: 8px 0 12px; }
+    #all-a-policy-pipeline .policy-text p { margin-bottom: 0; }
+    #all-a-policy-pipeline .unit-formula { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 8px; align-items: center; margin: 8px 0 12px; }
+    #all-a-policy-pipeline .unit-part { padding: 11px 8px; border-radius: 6px; text-align: center; background: color-mix(in srgb, var(--viz-series-2) 11%, transparent); }
+    #all-a-policy-pipeline .unit-op { color: var(--muted-foreground); text-align: center; }
+    #all-a-policy-pipeline .route-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 8px 0 12px; }
+    #all-a-policy-pipeline .route-item { padding: 10px; border-radius: 6px; }
+    #all-a-policy-pipeline .route-item strong { font-weight: 500; }
+    #all-a-policy-pipeline .route-yes { background: color-mix(in srgb, var(--viz-series-2) 13%, transparent); }
+    #all-a-policy-pipeline .route-mixed { background: color-mix(in srgb, var(--viz-series-5) 13%, transparent); }
+    #all-a-policy-pipeline .route-no { background: color-mix(in srgb, var(--muted) 55%, transparent); }
+    #all-a-policy-pipeline .score-pos { background: color-mix(in srgb, var(--viz-series-2) 15%, transparent); }
+    #all-a-policy-pipeline .score-neg { background: color-mix(in srgb, var(--viz-series-4) 15%, transparent); }
+    #all-a-policy-pipeline .score-neutral { background: color-mix(in srgb, var(--muted) 55%, transparent); }
+    #all-a-policy-pipeline .key-line { margin: 8px 0 10px; padding: 9px 11px; border-left: 3px solid var(--viz-series-1); background: color-mix(in srgb, var(--viz-series-1) 8%, transparent); }
+    #all-a-policy-pipeline .event-vector { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 10px 0 12px; }
+    #all-a-policy-pipeline .vector-item { min-height: 80px; padding: 10px; border-radius: 6px; background: color-mix(in srgb, var(--viz-series-1) 8%, transparent); }
+    #all-a-policy-pipeline .vector-value { display: block; margin-top: 4px; font-variant-numeric: tabular-nums; font-weight: 500; }
+    #all-a-policy-pipeline .positive .vector-value { color: var(--foreground); }
+    #all-a-policy-pipeline .negative .vector-value { color: var(--foreground); }
+    #all-a-policy-pipeline .timeline { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; align-items: end; margin: 12px 0 8px; }
+    #all-a-policy-pipeline .week { display: grid; grid-template-rows: minmax(38px, auto) auto; gap: 5px; text-align: center; }
+    #all-a-policy-pipeline .week-bar { align-self: end; padding: 8px 4px; border-radius: 6px 6px 2px 2px; background: color-mix(in srgb, var(--viz-series-1) var(--bar-alpha), transparent); }
+    #all-a-policy-pipeline .formula-strip { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 8px; align-items: center; margin: 10px 0 12px; }
+    #all-a-policy-pipeline .formula-box { padding: 10px; border-radius: 6px; text-align: center; background: color-mix(in srgb, var(--viz-series-2) 10%, transparent); }
+    #all-a-policy-pipeline .formula-op { color: var(--muted-foreground); text-align: center; }
+    #all-a-policy-pipeline .matrix td:not(:first-child), #all-a-policy-pipeline .matrix th:not(:first-child) { text-align: center; }
+    #all-a-policy-pipeline .nowrap { white-space: nowrap; }
+    #all-a-policy-pipeline .mini-bars { display: grid; gap: 6px; margin: 8px 0 12px; }
+    #all-a-policy-pipeline .mini-row { display: grid; grid-template-columns: minmax(128px, 1.4fr) 3fr minmax(48px, .5fr); gap: 8px; align-items: center; }
+    #all-a-policy-pipeline .mini-track { height: 12px; background: color-mix(in srgb, var(--muted) 65%, transparent); border-radius: 999px; overflow: hidden; }
+    #all-a-policy-pipeline .mini-fill { height: 100%; width: var(--w); background: var(--viz-series-1); border-radius: 999px; }
+    #all-a-policy-pipeline .mini-fill.neg { background: var(--viz-series-4); }
+    @media (max-width: 760px) {
+      #all-a-policy-pipeline .overview { grid-template-columns: 1fr; }
+      #all-a-policy-pipeline .overview-arrow { display: block; }
+      #all-a-policy-pipeline .section-head { grid-template-columns: 38px minmax(0, 1fr); }
+      #all-a-policy-pipeline .owner { grid-column: 2; }
+      #all-a-policy-pipeline .unit-formula, #all-a-policy-pipeline .formula-strip { grid-template-columns: 1fr; }
+      #all-a-policy-pipeline .unit-op, #all-a-policy-pipeline .formula-op { transform: rotate(90deg); }
+      #all-a-policy-pipeline .route-grid { grid-template-columns: 1fr; }
+      #all-a-policy-pipeline .event-vector { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      #all-a-policy-pipeline .mini-row { grid-template-columns: 1fr; gap: 3px; }
+    }
+    @media (max-width: 430px) {
+      #all-a-policy-pipeline .event-vector { grid-template-columns: 1fr; }
+    }
+  &lt;/style&gt;
+
+  &lt;div class=&quot;legend text-small&quot; aria-label=&quot;流程分工图例&quot;&gt;
+    &lt;span&gt;&lt;span class=&quot;dot ai-dot&quot;&gt;&lt;/span&gt;AI抽取或推断&lt;/span&gt;
+    &lt;span&gt;&lt;span class=&quot;dot rule-dot&quot;&gt;&lt;/span&gt;固定规则或程序&lt;/span&gt;
+    &lt;span&gt;&lt;span class=&quot;dot human-dot&quot;&gt;&lt;/span&gt;人工复核与参数校准&lt;/span&gt;
+    &lt;span&gt;虚构案例；分数仅演示数据结构&lt;/span&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;overview&quot; role=&quot;img&quot; aria-label=&quot;政策文本形成全A政策因子的完整流程&quot;&gt;
+    &lt;div class=&quot;overview-node&quot;&gt;&lt;strong&gt;政策原文&lt;/strong&gt;&lt;span class=&quot;text-small&quot;&gt;1篇文件&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;overview-arrow&quot;&gt;↓&lt;/div&gt;
+    &lt;div class=&quot;overview-node&quot;&gt;&lt;strong&gt;拆分措施&lt;/strong&gt;&lt;span class=&quot;text-small&quot;&gt;3项动作&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;overview-arrow&quot;&gt;↓&lt;/div&gt;
+    &lt;div class=&quot;overview-node&quot;&gt;&lt;strong&gt;全A路由&lt;/strong&gt;&lt;span class=&quot;text-small&quot;&gt;判断共同影响&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;overview-arrow&quot;&gt;↓&lt;/div&gt;
+    &lt;div class=&quot;overview-node&quot;&gt;&lt;strong&gt;展开渠道&lt;/strong&gt;&lt;span class=&quot;text-small&quot;&gt;5条示例关系&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;overview-arrow&quot;&gt;↓&lt;/div&gt;
+    &lt;div class=&quot;overview-node&quot;&gt;&lt;strong&gt;关系评分&lt;/strong&gt;&lt;span class=&quot;text-small&quot;&gt;方向＋权重&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;overview-arrow&quot;&gt;↓&lt;/div&gt;
+    &lt;div class=&quot;overview-node&quot;&gt;&lt;strong&gt;事件向量&lt;/strong&gt;&lt;span class=&quot;text-small&quot;&gt;正／负／净／分歧&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;overview-arrow&quot;&gt;↓&lt;/div&gt;
+    &lt;div class=&quot;overview-node&quot;&gt;&lt;strong&gt;日期因子&lt;/strong&gt;&lt;span class=&quot;text-small&quot;&gt;全A政策温度&lt;/span&gt;&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;section class=&quot;section&quot;&gt;
+    &lt;div class=&quot;section-head&quot;&gt;
+      &lt;div class=&quot;step-num&quot;&gt;0&lt;/div&gt;
+      &lt;div&gt;&lt;h2&gt;输入：一篇同时包含支持和约束的资本市场政策&lt;/h2&gt;&lt;div class=&quot;section-sub&quot;&gt;保存首发来源、可获得时间和原文；不能把后续细则倒填到首次发布日。&lt;/div&gt;&lt;/div&gt;
+      &lt;span class=&quot;viz-badge owner&quot;&gt;&lt;span class=&quot;dot rule-dot&quot;&gt;&lt;/span&gt;程序 + &lt;span class=&quot;dot ai-dot&quot;&gt;&lt;/span&gt;AI校验&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;card policy-text&quot;&gt;
+      &lt;div class=&quot;text-small&quot;&gt;P001《稳定资本市场运行与提高上市公司质量若干措施》｜示例监管机构｜2026-07-22 09:00首次公开&lt;/div&gt;
+      &lt;p&gt;①下调全市场股票交易印花税；②引导保险资金和养老金稳步提高A股配置比例，具体实施办法另行制定；③完善强制退市标准，加大财务造假处罚力度，自发布之日起施行。&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;table-responsive&quot;&gt;
+      &lt;table class=&quot;table table-sm&quot;&gt;
+        &lt;thead&gt;&lt;tr&gt;&lt;th&gt;policy_id&lt;/th&gt;&lt;th&gt;source_type&lt;/th&gt;&lt;th&gt;available_time&lt;/th&gt;&lt;th&gt;policy_tier&lt;/th&gt;&lt;th&gt;doc_stage&lt;/th&gt;&lt;th&gt;duplicate_group&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+        &lt;tbody&gt;&lt;tr&gt;&lt;td&gt;P001&lt;/td&gt;&lt;td&gt;官方原文&lt;/td&gt;&lt;td class=&quot;nowrap&quot;&gt;2026-07-22 09:00&lt;/td&gt;&lt;td&gt;全国&lt;/td&gt;&lt;td&gt;正式规则&lt;/td&gt;&lt;td&gt;DG001&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;
+      &lt;/table&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+
+  &lt;section class=&quot;section&quot;&gt;
+    &lt;div class=&quot;section-head&quot;&gt;
+      &lt;div class=&quot;step-num&quot;&gt;1&lt;/div&gt;
+      &lt;div&gt;&lt;h2&gt;原文拆成三个可独立判断的政策措施&lt;/h2&gt;&lt;div class=&quot;section-sub&quot;&gt;按政策工具、对象、执行状态和方向拆分，不按自然段机械切分。&lt;/div&gt;&lt;/div&gt;
+      &lt;span class=&quot;viz-badge owner&quot;&gt;&lt;span class=&quot;dot ai-dot&quot;&gt;&lt;/span&gt;AI拆分 + &lt;span class=&quot;dot human-dot&quot;&gt;&lt;/span&gt;人工抽查&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;table-responsive&quot;&gt;
+      &lt;table class=&quot;table table-sm&quot;&gt;
+        &lt;thead&gt;&lt;tr&gt;&lt;th&gt;measure_id&lt;/th&gt;&lt;th&gt;措施摘要&lt;/th&gt;&lt;th&gt;政策动作&lt;/th&gt;&lt;th&gt;执行状态&lt;/th&gt;&lt;th&gt;原文证据&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+        &lt;tbody&gt;
+          &lt;tr&gt;&lt;td&gt;M1&lt;/td&gt;&lt;td&gt;下调全市场股票交易印花税&lt;/td&gt;&lt;td&gt;降费&lt;/td&gt;&lt;td&gt;正式落地&lt;/td&gt;&lt;td&gt;“下调全市场股票交易印花税”&lt;/td&gt;&lt;/tr&gt;
+          &lt;tr&gt;&lt;td&gt;M2&lt;/td&gt;&lt;td&gt;引导长期资金提高A股配置比例&lt;/td&gt;&lt;td&gt;增资、配置引导&lt;/td&gt;&lt;td&gt;等待细则&lt;/td&gt;&lt;td&gt;“具体实施办法另行制定”&lt;/td&gt;&lt;/tr&gt;
+          &lt;tr&gt;&lt;td&gt;M3&lt;/td&gt;&lt;td&gt;强化财务造假处罚和退市执行&lt;/td&gt;&lt;td&gt;执法、退出&lt;/td&gt;&lt;td&gt;正式生效&lt;/td&gt;&lt;td&gt;“自发布之日起施行”&lt;/td&gt;&lt;/tr&gt;
+        &lt;/tbody&gt;
+      &lt;/table&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+
+  &lt;section class=&quot;section&quot;&gt;
+    &lt;div class=&quot;section-head&quot;&gt;
+      &lt;div class=&quot;step-num&quot;&gt;2&lt;/div&gt;
+      &lt;div&gt;&lt;h2&gt;先判断是否改变多数A股共同面对的市场环境&lt;/h2&gt;&lt;div class=&quot;section-sub&quot;&gt;全A路由判断覆盖对象；行业和风格关系另行保存，不能混入全A净温度。&lt;/div&gt;&lt;/div&gt;
+      &lt;span class=&quot;viz-badge owner&quot;&gt;&lt;span class=&quot;dot ai-dot&quot;&gt;&lt;/span&gt;AI路由 + &lt;span class=&quot;dot rule-dot&quot;&gt;&lt;/span&gt;固定边界&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;route-grid&quot; role=&quot;img&quot; aria-label=&quot;三项措施的全A、行业和风格路由结果&quot;&gt;
+      &lt;div class=&quot;route-item route-yes&quot;&gt;&lt;strong&gt;M1 印花税下调&lt;/strong&gt;&lt;br&gt;&lt;span class=&quot;text-small&quot;&gt;全A：强｜行业：否｜风格：弱&lt;/span&gt;&lt;/div&gt;
+      &lt;div class=&quot;route-item route-mixed&quot;&gt;&lt;strong&gt;M2 长期资金入市&lt;/strong&gt;&lt;br&gt;&lt;span class=&quot;text-small&quot;&gt;全A：强｜行业：否｜风格：可能偏大盘价值&lt;/span&gt;&lt;/div&gt;
+      &lt;div class=&quot;route-item route-mixed&quot;&gt;&lt;strong&gt;M3 退市与造假执法&lt;/strong&gt;&lt;br&gt;&lt;span class=&quot;text-small&quot;&gt;全A：强｜行业：否｜风格：偏质量与大盘&lt;/span&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;key-line&quot;&gt;&lt;strong&gt;全A只保存共同市场影响：&lt;/strong&gt;交易成本、增量资金、监管风险、市场质量和不确定性。大小盘、成长价值等相对信号通过同一事件编号转给风格管线。&lt;/div&gt;
+  &lt;/section&gt;
+
+  &lt;section class=&quot;section&quot;&gt;
+    &lt;div class=&quot;section-head&quot;&gt;
+      &lt;div class=&quot;step-num&quot;&gt;3&lt;/div&gt;
+      &lt;div&gt;&lt;h2&gt;每项措施展开为全市场传导渠道&lt;/h2&gt;&lt;div class=&quot;section-sub&quot;&gt;同一措施允许出现多条渠道；监管措施的短期与长期作用不能压成一个结论。&lt;/div&gt;&lt;/div&gt;
+      &lt;span class=&quot;viz-badge owner&quot;&gt;&lt;span class=&quot;dot ai-dot&quot;&gt;&lt;/span&gt;AI候选因果链&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;table-responsive&quot;&gt;
+      &lt;table class=&quot;table table-sm&quot;&gt;
+        &lt;thead&gt;&lt;tr&gt;&lt;th&gt;relation_id&lt;/th&gt;&lt;th&gt;对应政策例子&lt;/th&gt;&lt;th&gt;全市场渠道&lt;/th&gt;&lt;th&gt;期限&lt;/th&gt;&lt;th&gt;因果链&lt;/th&gt;&lt;th&gt;反向作用&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+        &lt;tbody&gt;
+          &lt;tr&gt;&lt;td&gt;R1&lt;/td&gt;&lt;td&gt;M1 下调交易印花税&lt;/td&gt;&lt;td&gt;交易成本与市场流动性&lt;/td&gt;&lt;td&gt;即时／短期&lt;/td&gt;&lt;td&gt;税费下降 → 交易摩擦下降 → 全市场流动性改善&lt;/td&gt;&lt;td&gt;成交提升不代表长期收益必然上升&lt;/td&gt;&lt;/tr&gt;
+          &lt;tr&gt;&lt;td&gt;R2&lt;/td&gt;&lt;td&gt;M2 长期资金提高A股配置&lt;/td&gt;&lt;td&gt;增量资金与配置需求&lt;/td&gt;&lt;td&gt;中期&lt;/td&gt;&lt;td&gt;长期资金配置比例提高 → A股需求增加&lt;/td&gt;&lt;td&gt;细则未出，实际增量可能低于表态&lt;/td&gt;&lt;/tr&gt;
+          &lt;tr&gt;&lt;td&gt;R3&lt;/td&gt;&lt;td&gt;M3 强化造假与退市执法&lt;/td&gt;&lt;td&gt;监管约束与风险承担&lt;/td&gt;&lt;td&gt;即时／短期&lt;/td&gt;&lt;td&gt;处罚与退市约束上升 → 活跃资金降风险&lt;/td&gt;&lt;td&gt;约束集中于高风险子集&lt;/td&gt;&lt;/tr&gt;
+          &lt;tr&gt;&lt;td&gt;R4&lt;/td&gt;&lt;td&gt;M3 强化造假与退市执法&lt;/td&gt;&lt;td&gt;公司治理与市场质量&lt;/td&gt;&lt;td&gt;中期／长期&lt;/td&gt;&lt;td&gt;造假成本上升 → 信息质量和投资者保护改善&lt;/td&gt;&lt;td&gt;制度价值兑现较慢&lt;/td&gt;&lt;/tr&gt;
+          &lt;tr&gt;&lt;td&gt;R5&lt;/td&gt;&lt;td&gt;M3 明确处罚与退市规则&lt;/td&gt;&lt;td&gt;不确定性与预期协调&lt;/td&gt;&lt;td&gt;中期&lt;/td&gt;&lt;td&gt;规则与处罚边界明确 → 制度不确定性下降&lt;/td&gt;&lt;td&gt;若执行尺度反复，改善不成立&lt;/td&gt;&lt;/tr&gt;
+        &lt;/tbody&gt;
+      &lt;/table&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+
+  &lt;section class=&quot;section&quot;&gt;
+    &lt;div class=&quot;section-head&quot;&gt;
+      &lt;div class=&quot;step-num&quot;&gt;4&lt;/div&gt;
+      &lt;div&gt;&lt;h2&gt;形成最小评分单元并逐行打分&lt;/h2&gt;&lt;div class=&quot;section-sub&quot;&gt;方向表示正负；强度、覆盖、确定性、信息增量和持续性决定幅度与时间路径。&lt;/div&gt;&lt;/div&gt;
+      &lt;span class=&quot;viz-badge owner&quot;&gt;&lt;span class=&quot;dot rule-dot&quot;&gt;&lt;/span&gt;评分表 + &lt;span class=&quot;dot ai-dot&quot;&gt;&lt;/span&gt;AI执行&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;unit-formula&quot; role=&quot;img&quot; aria-label=&quot;全A最小评分单元由政策措施、全市场渠道和影响期限组成&quot;&gt;
+      &lt;div class=&quot;unit-part&quot;&gt;&lt;strong&gt;政策措施&lt;/strong&gt;&lt;br&gt;&lt;span class=&quot;text-small&quot;&gt;M1／M2／M3&lt;/span&gt;&lt;/div&gt;
+      &lt;div class=&quot;unit-op&quot;&gt;×&lt;/div&gt;
+      &lt;div class=&quot;unit-part&quot;&gt;&lt;strong&gt;全市场渠道&lt;/strong&gt;&lt;br&gt;&lt;span class=&quot;text-small&quot;&gt;资金／交易／治理／监管&lt;/span&gt;&lt;/div&gt;
+      &lt;div class=&quot;unit-op&quot;&gt;×&lt;/div&gt;
+      &lt;div class=&quot;unit-part&quot;&gt;&lt;strong&gt;影响期限&lt;/strong&gt;&lt;br&gt;&lt;span class=&quot;text-small&quot;&gt;即时／短期／中期／长期&lt;/span&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;table-responsive&quot;&gt;
+      &lt;table class=&quot;table table-sm matrix&quot;&gt;
+        &lt;thead&gt;&lt;tr&gt;&lt;th&gt;关系&lt;/th&gt;&lt;th&gt;方向&lt;/th&gt;&lt;th&gt;强度&lt;/th&gt;&lt;th&gt;覆盖&lt;/th&gt;&lt;th&gt;确定性&lt;/th&gt;&lt;th&gt;增量&lt;/th&gt;&lt;th&gt;边际&lt;/th&gt;&lt;th&gt;持续性&lt;/th&gt;&lt;th&gt;置信度&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+        &lt;tbody&gt;
+          &lt;tr class=&quot;score-pos&quot;&gt;&lt;td&gt;R1 交易成本·短期&lt;/td&gt;&lt;td&gt;+1&lt;/td&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;4&lt;/td&gt;&lt;td&gt;4&lt;/td&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;+2&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;0.96&lt;/td&gt;&lt;/tr&gt;
+          &lt;tr class=&quot;score-pos&quot;&gt;&lt;td&gt;R2 增量资金·中期&lt;/td&gt;&lt;td&gt;+1&lt;/td&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;4&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;+1&lt;/td&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;0.84&lt;/td&gt;&lt;/tr&gt;
+          &lt;tr class=&quot;score-neg&quot;&gt;&lt;td&gt;R3 监管风险·短期&lt;/td&gt;&lt;td&gt;−1&lt;/td&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;4&lt;/td&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;−2&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;0.88&lt;/td&gt;&lt;/tr&gt;
+          &lt;tr class=&quot;score-pos&quot;&gt;&lt;td&gt;R4 市场质量·长期&lt;/td&gt;&lt;td&gt;+1&lt;/td&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;4&lt;/td&gt;&lt;td&gt;4&lt;/td&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;+2&lt;/td&gt;&lt;td&gt;4&lt;/td&gt;&lt;td&gt;0.82&lt;/td&gt;&lt;/tr&gt;
+          &lt;tr class=&quot;score-pos&quot;&gt;&lt;td&gt;R5 预期协调·中期&lt;/td&gt;&lt;td&gt;+1&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;4&lt;/td&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;+1&lt;/td&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;0.76&lt;/td&gt;&lt;/tr&gt;
+        &lt;/tbody&gt;
+      &lt;/table&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;key-line&quot;&gt;&lt;strong&gt;关键区别：&lt;/strong&gt;M3短期通过监管约束形成负向关系，长期通过治理改善形成正向关系。两条记录分别衰减，不能相互覆盖。&lt;/div&gt;
+  &lt;/section&gt;
+
+  &lt;section class=&quot;section&quot;&gt;
+    &lt;div class=&quot;section-head&quot;&gt;
+      &lt;div class=&quot;step-num&quot;&gt;5&lt;/div&gt;
+      &lt;div&gt;&lt;h2&gt;单篇政策先形成事件级全A向量&lt;/h2&gt;&lt;div class=&quot;section-sub&quot;&gt;示例值根据评分字段演示计算；正式公式、渠道权重和阈值均待回测。&lt;/div&gt;&lt;/div&gt;
+      &lt;span class=&quot;viz-badge owner&quot;&gt;&lt;span class=&quot;dot rule-dot&quot;&gt;&lt;/span&gt;程序聚合&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;formula-strip&quot; role=&quot;img&quot; aria-label=&quot;关系分数由方向、强度、覆盖、执行确定性、信息影响力和置信度相乘形成&quot;&gt;
+      &lt;div class=&quot;formula-box&quot;&gt;关系方向&lt;br&gt;&lt;strong&gt;−1／0／+1&lt;/strong&gt;&lt;/div&gt;
+      &lt;div class=&quot;formula-op&quot;&gt;×&lt;/div&gt;
+      &lt;div class=&quot;formula-box&quot;&gt;强度 × 覆盖 × 确定性&lt;br&gt;&lt;span class=&quot;text-small&quot;&gt;均标准化到0～1&lt;/span&gt;&lt;/div&gt;
+      &lt;div class=&quot;formula-op&quot;&gt;×&lt;/div&gt;
+      &lt;div class=&quot;formula-box&quot;&gt;影响力 × 置信度&lt;br&gt;&lt;span class=&quot;text-small&quot;&gt;得到StateScore&lt;/span&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;event-vector&quot; aria-label=&quot;P001事件级全A向量&quot;&gt;
+      &lt;div class=&quot;vector-item positive&quot;&gt;&lt;span class=&quot;text-small&quot;&gt;正向政策量&lt;/span&gt;&lt;span class=&quot;vector-value&quot;&gt;+1.86&lt;/span&gt;&lt;span class=&quot;text-small&quot;&gt;R1＋R2＋R4＋R5&lt;/span&gt;&lt;/div&gt;
+      &lt;div class=&quot;vector-item negative&quot;&gt;&lt;span class=&quot;text-small&quot;&gt;负向政策量&lt;/span&gt;&lt;span class=&quot;vector-value&quot;&gt;−0.52&lt;/span&gt;&lt;span class=&quot;text-small&quot;&gt;R3监管冲击&lt;/span&gt;&lt;/div&gt;
+      &lt;div class=&quot;vector-item&quot;&gt;&lt;span class=&quot;text-small&quot;&gt;净政策温度&lt;/span&gt;&lt;span class=&quot;vector-value&quot;&gt;+1.34&lt;/span&gt;&lt;span class=&quot;text-small&quot;&gt;当前事件合成值&lt;/span&gt;&lt;/div&gt;
+      &lt;div class=&quot;vector-item&quot;&gt;&lt;span class=&quot;text-small&quot;&gt;政策分歧度&lt;/span&gt;&lt;span class=&quot;vector-value&quot;&gt;0.44&lt;/span&gt;&lt;span class=&quot;text-small&quot;&gt;正负渠道并存&lt;/span&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;mini-bars&quot; role=&quot;img&quot; aria-label=&quot;事件各渠道示例贡献&quot;&gt;
+      &lt;div class=&quot;mini-row&quot;&gt;&lt;span&gt;交易成本与流动性&lt;/span&gt;&lt;div class=&quot;mini-track&quot;&gt;&lt;div class=&quot;mini-fill&quot; style=&quot;--w:78%&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;span class=&quot;text-end&quot;&gt;+0.78&lt;/span&gt;&lt;/div&gt;
+      &lt;div class=&quot;mini-row&quot;&gt;&lt;span&gt;增量资金&lt;/span&gt;&lt;div class=&quot;mini-track&quot;&gt;&lt;div class=&quot;mini-fill&quot; style=&quot;--w:42%&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;span class=&quot;text-end&quot;&gt;+0.42&lt;/span&gt;&lt;/div&gt;
+      &lt;div class=&quot;mini-row&quot;&gt;&lt;span&gt;监管约束&lt;/span&gt;&lt;div class=&quot;mini-track&quot;&gt;&lt;div class=&quot;mini-fill neg&quot; style=&quot;--w:52%&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;span class=&quot;text-end&quot;&gt;−0.52&lt;/span&gt;&lt;/div&gt;
+      &lt;div class=&quot;mini-row&quot;&gt;&lt;span&gt;治理与市场质量&lt;/span&gt;&lt;div class=&quot;mini-track&quot;&gt;&lt;div class=&quot;mini-fill&quot; style=&quot;--w:48%&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;span class=&quot;text-end&quot;&gt;+0.48&lt;/span&gt;&lt;/div&gt;
+      &lt;div class=&quot;mini-row&quot;&gt;&lt;span&gt;不确定性下降&lt;/span&gt;&lt;div class=&quot;mini-track&quot;&gt;&lt;div class=&quot;mini-fill&quot; style=&quot;--w:18%&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;span class=&quot;text-end&quot;&gt;+0.18&lt;/span&gt;&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+
+  &lt;section class=&quot;section&quot;&gt;
+    &lt;div class=&quot;section-head&quot;&gt;
+      &lt;div class=&quot;step-num&quot;&gt;6&lt;/div&gt;
+      &lt;div&gt;&lt;h2&gt;事件信号按期限衰减并聚合到交易日&lt;/h2&gt;&lt;div class=&quot;section-sub&quot;&gt;周频4／3／2／1只是一组baseline；应与日频半衰期版本做样本外比较。&lt;/div&gt;&lt;/div&gt;
+      &lt;span class=&quot;viz-badge owner&quot;&gt;&lt;span class=&quot;dot rule-dot&quot;&gt;&lt;/span&gt;程序 + &lt;span class=&quot;dot human-dot&quot;&gt;&lt;/span&gt;参数校准&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;timeline&quot; role=&quot;img&quot; aria-label=&quot;政策事件按四周100%、75%、50%、25%衰减&quot;&gt;
+      &lt;div class=&quot;week&quot;&gt;&lt;div class=&quot;week-bar&quot; style=&quot;--bar-alpha:70%&quot;&gt;&lt;strong&gt;100%&lt;/strong&gt;&lt;br&gt;&lt;span class=&quot;text-small&quot;&gt;事件周&lt;/span&gt;&lt;/div&gt;&lt;span&gt;W0&lt;/span&gt;&lt;/div&gt;
+      &lt;div class=&quot;week&quot;&gt;&lt;div class=&quot;week-bar&quot; style=&quot;--bar-alpha:53%&quot;&gt;&lt;strong&gt;75%&lt;/strong&gt;&lt;br&gt;&lt;span class=&quot;text-small&quot;&gt;继续生效&lt;/span&gt;&lt;/div&gt;&lt;span&gt;W+1&lt;/span&gt;&lt;/div&gt;
+      &lt;div class=&quot;week&quot;&gt;&lt;div class=&quot;week-bar&quot; style=&quot;--bar-alpha:36%&quot;&gt;&lt;strong&gt;50%&lt;/strong&gt;&lt;br&gt;&lt;span class=&quot;text-small&quot;&gt;信号衰减&lt;/span&gt;&lt;/div&gt;&lt;span&gt;W+2&lt;/span&gt;&lt;/div&gt;
+      &lt;div class=&quot;week&quot;&gt;&lt;div class=&quot;week-bar&quot; style=&quot;--bar-alpha:20%&quot;&gt;&lt;strong&gt;25%&lt;/strong&gt;&lt;br&gt;&lt;span class=&quot;text-small&quot;&gt;尾部影响&lt;/span&gt;&lt;/div&gt;&lt;span&gt;W+3&lt;/span&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;table-responsive&quot;&gt;
+      &lt;table class=&quot;table table-sm matrix&quot;&gt;
+        &lt;thead&gt;&lt;tr&gt;&lt;th&gt;date&lt;/th&gt;&lt;th&gt;positive&lt;/th&gt;&lt;th&gt;negative&lt;/th&gt;&lt;th&gt;net_temperature&lt;/th&gt;&lt;th&gt;news_shock&lt;/th&gt;&lt;th&gt;disagreement&lt;/th&gt;&lt;th&gt;short_term&lt;/th&gt;&lt;th&gt;medium_long&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+        &lt;tbody&gt;
+          &lt;tr&gt;&lt;td&gt;2026-07-22&lt;/td&gt;&lt;td&gt;1.86&lt;/td&gt;&lt;td&gt;−0.52&lt;/td&gt;&lt;td&gt;1.34&lt;/td&gt;&lt;td&gt;0.98&lt;/td&gt;&lt;td&gt;0.44&lt;/td&gt;&lt;td&gt;0.26&lt;/td&gt;&lt;td&gt;1.08&lt;/td&gt;&lt;/tr&gt;
+          &lt;tr&gt;&lt;td&gt;2026-07-29&lt;/td&gt;&lt;td&gt;1.40&lt;/td&gt;&lt;td&gt;−0.39&lt;/td&gt;&lt;td&gt;1.01&lt;/td&gt;&lt;td&gt;0.74&lt;/td&gt;&lt;td&gt;0.33&lt;/td&gt;&lt;td&gt;0.20&lt;/td&gt;&lt;td&gt;0.81&lt;/td&gt;&lt;/tr&gt;
+          &lt;tr&gt;&lt;td&gt;2026-08-05&lt;/td&gt;&lt;td&gt;0.93&lt;/td&gt;&lt;td&gt;−0.26&lt;/td&gt;&lt;td&gt;0.67&lt;/td&gt;&lt;td&gt;0.49&lt;/td&gt;&lt;td&gt;0.22&lt;/td&gt;&lt;td&gt;0.13&lt;/td&gt;&lt;td&gt;0.54&lt;/td&gt;&lt;/tr&gt;
+          &lt;tr&gt;&lt;td&gt;2026-08-12&lt;/td&gt;&lt;td&gt;0.47&lt;/td&gt;&lt;td&gt;−0.13&lt;/td&gt;&lt;td&gt;0.34&lt;/td&gt;&lt;td&gt;0.25&lt;/td&gt;&lt;td&gt;0.11&lt;/td&gt;&lt;td&gt;0.07&lt;/td&gt;&lt;td&gt;0.27&lt;/td&gt;&lt;/tr&gt;
+        &lt;/tbody&gt;
+      &lt;/table&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+
+  &lt;section class=&quot;section&quot;&gt;
+    &lt;div class=&quot;section-head&quot;&gt;
+      &lt;div class=&quot;step-num&quot;&gt;7&lt;/div&gt;
+      &lt;div&gt;&lt;h2&gt;最终输出：全A政策因子面板，而不是LLM仓位结论&lt;/h2&gt;&lt;div class=&quot;section-sub&quot;&gt;正向、负向、净温度、新闻冲击、分歧度和渠道分项同时保留；仓位映射等待样本外检验。&lt;/div&gt;&lt;/div&gt;
+      &lt;span class=&quot;viz-badge owner&quot;&gt;&lt;span class=&quot;dot rule-dot&quot;&gt;&lt;/span&gt;程序输出 + &lt;span class=&quot;dot human-dot&quot;&gt;&lt;/span&gt;研究检验&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;table-responsive&quot;&gt;
+      &lt;table class=&quot;table table-sm&quot;&gt;
+        &lt;thead&gt;&lt;tr&gt;&lt;th&gt;层级&lt;/th&gt;&lt;th&gt;输出&lt;/th&gt;&lt;th&gt;用途&lt;/th&gt;&lt;th&gt;不能直接解释为&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+        &lt;tbody&gt;
+          &lt;tr&gt;&lt;td&gt;事件层&lt;/td&gt;&lt;td&gt;措施—渠道—期限关系分&lt;/td&gt;&lt;td&gt;审计证据、复核评分&lt;/td&gt;&lt;td&gt;单篇政策必然带来指数上涨&lt;/td&gt;&lt;/tr&gt;
+          &lt;tr&gt;&lt;td&gt;日期层&lt;/td&gt;&lt;td&gt;全A正向、负向、净温度与渠道分项&lt;/td&gt;&lt;td&gt;事件研究、时序检验&lt;/td&gt;&lt;td&gt;已经验证的择时因子&lt;/td&gt;&lt;/tr&gt;
+          &lt;tr&gt;&lt;td&gt;策略层&lt;/td&gt;&lt;td&gt;经训练样本确定的仓位档位&lt;/td&gt;&lt;td&gt;样本外回测和组合管理&lt;/td&gt;&lt;td&gt;LLM直接给出的投资建议&lt;/td&gt;&lt;/tr&gt;
+        &lt;/tbody&gt;
+      &lt;/table&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;key-line&quot;&gt;&lt;strong&gt;最终数据链：&lt;/strong&gt;政策文件表 → 政策措施表 → 全A路由表 → 措施—渠道—期限关系表 → 关系评分表 → 日期—渠道聚合表 → 全A政策因子面板。&lt;/div&gt;
+  &lt;/section&gt;
+&lt;/div&gt;
+
+&lt;script src=&quot;https://unpkg.com/@floating-ui/core@1.7.3/dist/floating-ui.core.umd.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;https://unpkg.com/@floating-ui/dom@1.7.4/dist/floating-ui.dom.umd.min.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+(() =&gt; {
+  if (window.FloatingUIDOM == null) {
+    return;
+  }
+  const { autoUpdate, computePosition, flip, offset, shift, size } =
+    window.FloatingUIDOM;
+  const tooltipPlacements = new Set([&quot;top&quot;, &quot;right&quot;, &quot;bottom&quot;, &quot;left&quot;]);
+  const tooltipId = `codex-visualization-tooltip-${
+    window.crypto?.randomUUID?.() ?? Date.now().toString(36)
+  }`;
+  const tooltipGap = 5;
+  const hoverDelay = 700;
+  const skipDelay = 300;
+  let activeTrigger = null;
+  let pendingTrigger = null;
+  let tooltip = null;
+  let openTimeout = null;
+  let autoUpdateCleanup = null;
+  let positionRequest = 0;
+  let skipDelayUntil = 0;
+
+  const getTrigger = (target) =&gt;
+    target?.nodeType === Node.ELEMENT_NODE
+      ? target.closest(&quot;[data-tooltip]&quot;)
+      : null;
+  const containsTarget = (trigger, target) =&gt;
+    target?.nodeType != null &amp;&amp; trigger.contains(target);
+  const getContent = (trigger) =&gt;
+    trigger.getAttribute(&quot;data-tooltip&quot;)?.trim() ?? &quot;&quot;;
+  const getPlacement = (trigger) =&gt; {
+    const placement = trigger.getAttribute(&quot;data-tooltip-placement&quot;);
+    return tooltipPlacements.has(placement) ? placement : &quot;top&quot;;
+  };
+  const getTooltip = () =&gt; {
+    if (tooltip == null) {
+      tooltip = document.createElement(&quot;div&quot;);
+      tooltip.id = tooltipId;
+      tooltip.className = &quot;tooltip&quot;;
+      tooltip.setAttribute(&quot;role&quot;, &quot;tooltip&quot;);
+    }
+    return tooltip;
+  };
+  const setDescribedBy = (trigger, described) =&gt; {
+    const ids = new Set(
+      (trigger.getAttribute(&quot;aria-describedby&quot;) ?? &quot;&quot;)
+        .split(/\s+/)
+        .filter(Boolean),
+    );
+    if (described) {
+      ids.add(tooltipId);
+    } else {
+      ids.delete(tooltipId);
+    }
+    if (ids.size === 0) {
+      trigger.removeAttribute(&quot;aria-describedby&quot;);
+    } else {
+      trigger.setAttribute(&quot;aria-describedby&quot;, [...ids].join(&quot; &quot;));
+    }
+  };
+  const clearOpenTimeout = () =&gt; {
+    if (openTimeout != null) {
+      window.clearTimeout(openTimeout);
+      openTimeout = null;
+    }
+    pendingTrigger = null;
+  };
+  const closeTooltip = (activateSkipDelay = true) =&gt; {
+    clearOpenTimeout();
+    positionRequest += 1;
+    autoUpdateCleanup?.();
+    autoUpdateCleanup = null;
+    if (activeTrigger == null) {
+      return;
+    }
+    setDescribedBy(activeTrigger, false);
+    activeTrigger = null;
+    tooltip?.remove();
+    if (activateSkipDelay) {
+      skipDelayUntil = Date.now() + skipDelay;
+    }
+  };
+  const updatePosition = (trigger, floating) =&gt; {
+    const request = ++positionRequest;
+    void computePosition(trigger, floating, {
+      middleware: [
+        offset(tooltipGap),
+        flip({ padding: tooltipGap }),
+        shift({ padding: tooltipGap }),
+        size({
+          padding: tooltipGap,
+          apply({ availableHeight, availableWidth, elements }) {
+            elements.floating.style.setProperty(
+              &quot;--tooltip-available-width&quot;,
+              `${Math.max(0, availableWidth)}px`,
+            );
+            elements.floating.style.setProperty(
+              &quot;--tooltip-available-height&quot;,
+              `${Math.max(0, availableHeight)}px`,
+            );
+          },
+        }),
+      ],
+      placement: getPlacement(trigger),
+      strategy: &quot;fixed&quot;,
+    })
+      .then(({ x, y }) =&gt; {
+        if (activeTrigger !== trigger || request !== positionRequest) {
+          return;
+        }
+        const scale = window.devicePixelRatio || 1;
+        floating.style.transform = `translate(${Math.round(x * scale) / scale}px, ${Math.round(y * scale) / scale}px)`;
+        floating.style.visibility = &quot;visible&quot;;
+      })
+      .catch(() =&gt; {
+        if (activeTrigger === trigger &amp;&amp; request === positionRequest) {
+          closeTooltip(false);
+        }
+      });
+  };
+  const openTooltip = (trigger) =&gt; {
+    const content = getContent(trigger);
+    if (!trigger.isConnected || content.length === 0) {
+      return;
+    }
+    clearOpenTimeout();
+    if (activeTrigger === trigger) {
+      return;
+    }
+    closeTooltip();
+    const floating = getTooltip();
+    floating.textContent = content;
+    floating.style.visibility = &quot;hidden&quot;;
+    floating.style.transform = &quot;translate(0, 0)&quot;;
+    document.body.appendChild(floating);
+    activeTrigger = trigger;
+    setDescribedBy(trigger, true);
+    autoUpdateCleanup = autoUpdate(trigger, floating, () =&gt; {
+      updatePosition(trigger, floating);
+    });
+  };
+  const requestOpen = (trigger, immediate = false) =&gt; {
+    if (
+      getContent(trigger).length === 0 ||
+      activeTrigger === trigger ||
+      pendingTrigger === trigger
+    ) {
+      return;
+    }
+    clearOpenTimeout();
+    pendingTrigger = trigger;
+    const delay =
+      immediate || activeTrigger != null || Date.now() &lt; skipDelayUntil
+        ? 0
+        : hoverDelay;
+    if (delay === 0) {
+      openTooltip(trigger);
+      return;
+    }
+    openTimeout = window.setTimeout(() =&gt; {
+      openTimeout = null;
+      pendingTrigger = null;
+      openTooltip(trigger);
+    }, delay);
+  };
+  const handlePointerOpen = (event) =&gt; {
+    if (event.pointerType === &quot;touch&quot;) {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    requestOpen(trigger);
+  };
+  const handleLeave = (event) =&gt; {
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const handleFocusIn = (event) =&gt; {
+    const trigger = getTrigger(event.target);
+    if (trigger?.matches(&quot;:focus-visible&quot;)) {
+      requestOpen(trigger, true);
+    }
+  };
+  const handleKeyDown = (event) =&gt; {
+    if (event.key === &quot;Escape&quot;) {
+      closeTooltip();
+    }
+  };
+  const handleContextMenu = (event) =&gt; {
+    const trigger = getTrigger(event.target);
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const destroy = () =&gt; {
+    closeTooltip(false);
+    document.removeEventListener(&quot;pointerover&quot;, handlePointerOpen);
+    document.removeEventListener(&quot;pointerout&quot;, handleLeave);
+    document.removeEventListener(&quot;focusin&quot;, handleFocusIn);
+    document.removeEventListener(&quot;focusout&quot;, handleLeave);
+    document.removeEventListener(&quot;keydown&quot;, handleKeyDown);
+    document.removeEventListener(&quot;contextmenu&quot;, handleContextMenu);
+    tooltip = null;
+  };
+
+  document.addEventListener(&quot;pointerover&quot;, handlePointerOpen);
+  document.addEventListener(&quot;pointerout&quot;, handleLeave);
+  document.addEventListener(&quot;focusin&quot;, handleFocusIn);
+  document.addEventListener(&quot;focusout&quot;, handleLeave);
+  document.addEventListener(&quot;keydown&quot;, handleKeyDown);
+  document.addEventListener(&quot;contextmenu&quot;, handleContextMenu);
+  window.addEventListener(&quot;pagehide&quot;, destroy, { once: true });
+})();
+&lt;/script&gt;
+&lt;script id=&quot;codex-visualization-lucide&quot; async src=&quot;https://unpkg.com/lucide@1.17.0/dist/umd/lucide.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+(() =&gt; {
+  const initialize = () =&gt; {
+    globalThis.lucide?.createIcons({ attrs: { width: 16, height: 16 } });
+  };
+  if (globalThis.lucide != null) {
+    initialize();
+    return;
+  }
+  document
+    .getElementById(&quot;codex-visualization-lucide&quot;)
+    ?.addEventListener(&quot;load&quot;, initialize, { once: true });
+})();
+&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe>
+</body>
+</html>

@@ -1,0 +1,56 @@
+# Secrets and local configuration
+.env
+**/.env
+!.env.example
+*.key
+*.pem
+
+# Python / Node
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+node_modules/
+tools/node_modules
+
+# Runtime databases and archives
+postgres_data/
+state/*.sqlite3
+state/*.sqlite3-*
+backups/
+raw_archive/
+
+# Logs and temporary artifacts
+logs/
+**/logs/
+*.log
+*.tmp
+*.inspect.ndjson
+deliverables/policy_pipeline_delivery.json
+deliverables/preview_*.png
+deliverables/*.xlsx
+deliverables/*.zip
+
+# Large/generated model outputs
+work_scoring_v1/output/
+policy_text_router_v0/output*/
+work_scoring_v1/data/sample_5000.csv
+work_scoring_v1/data/frozen_scores_relations.csv
+exports/*.csv
+policy_text_router_v0/data/history_probe/
+policy_text_router_v0/work/
+
+# Research source library: keep locally, publish curated Markdown only
+全A行业风格子课题_副本/**/*.pdf
+全A行业风格子课题_副本/0709-文献raw.md/
+
+# Superseded/temporary delivery files
+deliverables/index.html
+deliverables/workbook_checks.ndjson
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

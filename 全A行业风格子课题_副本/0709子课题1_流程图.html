@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>子课题1 案例全流程图</title>
+  <style>
+    body { font-family: "Microsoft YaHei", sans-serif; max-width: 1200px; margin: 24px auto; padding: 0 16px; color: #222; }
+    h1 { font-size: 1.4rem; }
+    p { line-height: 1.6; }
+    .mermaid { background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 16px; margin: 16px 0; overflow-x: auto; }
+    table { border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 0.95rem; }
+    th, td { border: 1px solid #ddd; padding: 8px 12px; text-align: left; }
+    th { background: #f5f5f5; }
+    .note { background: #f0f7ff; border-left: 4px solid #4a90e2; padding: 12px 16px; margin: 16px 0; font-size: 0.95rem; }
+    blockquote { background: #fffbe6; border-left: 4px solid #faad14; margin: 16px 0; padding: 12px 16px; }
+  </style>
+</head>
+<body>
+  <h1>子课题1：案例全流程图（小额快速再融资）</h1>
+  <p>对应 <code>0709子课题1综述.md</code> §八 8.0。一条政策从原文到 12 维打分再到输出。</p>
+
+  <blockquote>
+    《上市公司监管指引——再融资（修订）》节选：将小额快速再融资额度由 3 亿元提高至 6 亿元，特大企业由 6 亿元提高至 10 亿元；自 2026 年 8 月 1 日起施行。
+  </blockquote>
+
+  <div class="mermaid">
+flowchart TB
+    P["政策原文<br/>小额快速再融资 3亿到6亿<br/>特大企业10亿 自2026-08-01施行"]
+
+    subgraph L1["第一层 表层五要素 只读字面"]
+        L1a["目标: 便利上市公司股权融资"]
+        L1b["工具: 提高再融资额度上限"]
+        L1c["对象: 上市公司含特大企业"]
+        L1d["市场: A股股权融资端"]
+        L1e["时间: 2026-08-01 施行"]
+    end
+
+    subgraph R["Step1 路由层 贴标签 不打分"]
+        R1["话语动作: 制度落地型 + 授权开放型"]
+        R2["text_type: 制度落地"]
+        R3["doc_type: 落地细则 | policy_tier: 部委"]
+        R4["is_first_release: 是 | impact_weeks: 3"]
+    end
+
+    subgraph IDX["索引模块 2维"]
+        I1["文本类型: 制度落地"]
+        I2["信息影响力: 4"]
+    end
+
+    subgraph ALLA["全A模块 6维 每条独立因子"]
+        A1["市场定位倾向 +3"]
+        A2["制度变革确定性 +5"]
+        A3["资金通道强度 +1"]
+        A4["监管约束强度 0"]
+        A5["政策边际变化 +3"]
+        A6["政策信息增量 +4"]
+    end
+
+    subgraph STY["风格模块 4维"]
+        S1["成长价值偏好 +3"]
+        S2["大小盘偏好 +1"]
+        S3["风险偏好EPU -1"]
+        S4["宏观叙事预期 +2"]
+    end
+
+    subgraph OUT["输出层 周频聚合后给策略"]
+        O1["全A温度: 偏多"]
+        O2["风格: 成长大于价值"]
+        O3["大小盘: 中性略偏大盘"]
+    end
+
+    P --> L1
+    L1 --> R
+    R --> IDX
+    R --> ALLA
+    R --> STY
+    IDX --> OUT
+    ALLA --> OUT
+    STY --> OUT
+  </div>
+
+  <table>
+    <tr><th>层级</th><th>干什么</th><th>本条填了什么</th></tr>
+    <tr><td>政策原文</td><td>输入</td><td>再融资 3亿到6亿，特大10亿，8月1日施行</td></tr>
+    <tr><td>第一层 表层</td><td>拆五要素，不打分</td><td>目标/工具/对象/市场/时间</td></tr>
+    <tr><td>Step1 路由</td><td>贴标签</td><td>制度落地+授权开放；impact_weeks=3</td></tr>
+    <tr><td>12维评分</td><td>逐项打 -5~5</td><td>制度确定性+5；监管约束0；成长价值+3</td></tr>
+    <tr><td>输出层</td><td>合成信号</td><td>全A偏多；成长&gt;价值</td></tr>
+  </table>
+
+  <div class="note">
+    Cursor 里若 Markdown 预览不显示图：安装 <strong>Markdown Preview Mermaid Support</strong>，或继续用本 HTML 文件。
+  </div>
+
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({ startOnLoad: true, theme: "default", flowchart: { htmlLabels: true, curve: "basis" } });
+  </script>
+</body>
+</html>
