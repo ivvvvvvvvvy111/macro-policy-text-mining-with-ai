@@ -13,6 +13,7 @@
 - 当前评分流水线：[`work_scoring_v1/README.md`](work_scoring_v1/README.md)。
 - 早期数据和路由实验：[`policy_text_router_v0/README.md`](policy_text_router_v0/README.md)。
 - 结果展示：[`deliverables/结果展示网页/index.html`](deliverables/结果展示网页/index.html)。
+- 在线研究台前端 / Vercel 部署：[`web/README.md`](web/README.md)。
 
 ## 快速检查
 ```bash
