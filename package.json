@@ -1,0 +1,11 @@
+{
+  "name": "macro-policy-research-hub-web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Static Vercel frontend for the macro policy research hub.",
+  "scripts": {
+    "dev": "python3 -m http.server 8766",
+    "check": "node --check /tmp/macro-policy-site-script.js || true",
+    "deploy": "vercel --prod"
+  }
+}
