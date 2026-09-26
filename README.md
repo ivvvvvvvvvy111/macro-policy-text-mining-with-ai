@@ -15,6 +15,14 @@
 - 结果展示：[`deliverables/结果展示网页/index.html`](deliverables/结果展示网页/index.html)。
 - 在线研究台前端 / Vercel 部署：[`web/README.md`](web/README.md)。
 
+## 在线网页部署
+
+前端源码在 [`web/`](web/)，可用 Vercel 直接部署：
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fivvvvvvvvvy111%2Fmacro-policy-text-mining-with-ai&project-name=macro-policy-research-hub&repository-name=macro-policy-text-mining-with-ai&root-directory=web)
+
+导入时确认 `Root Directory = web`。
+
 ## 快速检查
 ```bash
 make status

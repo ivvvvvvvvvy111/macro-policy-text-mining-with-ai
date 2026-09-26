@@ -30,6 +30,9 @@ http://localhost:8766
 
 ## Vercel 部署
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fivvvvvvvvvy111%2Fmacro-policy-text-mining-with-ai&project-name=macro-policy-research-hub&repository-name=macro-policy-text-mining-with-ai&root-directory=web)
+
+
 推荐在 Vercel 中选择本仓库，并设置：
 
 ```text
