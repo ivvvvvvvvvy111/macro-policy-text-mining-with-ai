@@ -41,3 +41,12 @@ const unavailable=await vm.runInContext("fetchEvidenceDay('industry','2026-10-09
 assert.equal(unavailable.available,false);
 assert.equal(unavailable.news_count,null);
 console.log('PASS: unsynced evidence is missing, not zero');
+const permissionFn=html.match(/function mayReadTodo\(role\)\{[^\n]*?\}/)[0];
+const permissionCtx=vm.createContext({});vm.runInContext(permissionFn,permissionCtx);
+for(const role of ['admin','researcher'])assert.equal(vm.runInContext(`mayReadTodo('${role}')`,permissionCtx),true);
+for(const role of ['viewer','', 'guest','ADMIN'])assert.equal(vm.runInContext(`mayReadTodo('${role}')`,permissionCtx),false);
+assert.equal(vm.runInContext('mayReadTodo(undefined)',permissionCtx),false);
+assert.ok(html.includes('class="todo-restricted" data-p="todo" hidden'));
+assert.ok(html.includes('macro_research_todo_v1'));
+assert.ok(!html.includes('research_todo.v1')); // Private task payloads are not shipped in public HTML.
+console.log('PASS: admin/researcher access, viewer/anonymous denial, private task content excluded from HTML');

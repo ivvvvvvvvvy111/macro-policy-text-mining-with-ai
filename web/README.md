@@ -67,3 +67,9 @@ web/index.html
 ```
 
 当前是单文件静态页，便于 Claude / Cursor / Codex 直接修改。后续如果 UI 复杂起来，可以再拆成 React/Next.js 项目。
+
+## 研究 To-do
+
+登录后的管理员与研究员可见第四个栏目。任务清单读取`macro_dashboard_artifacts`中的`macro_research_todo_v1`（`artifact_type=todo`、`min_role=researcher`），由现有RLS校验权限；不在公开HTML内嵌任务内容。viewer和未登录用户不显示入口。
+
+支持按状态和优先级筛选、刷新以及查看已完成事项；当前为只读展示，任务状态由项目负责人在受限云端清单统一维护。
