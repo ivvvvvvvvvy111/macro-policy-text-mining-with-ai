@@ -19,7 +19,7 @@
 </head><body><header><div class="hdr-row"><div><h1>长文本政策新闻日频研究报告</h1><div>市场走势、政策活动与全A / 行业 / 风格信号联动</div></div><div class="refresh-box"><span id="refreshStatus" class="refresh-status" role="status" aria-live="polite"></span><button type="button" id="refreshBtn" class="refresh-btn" title="重新读取云端数据库的最新数据">⟳ 刷新数据</button></div></div></header><nav class="tabs"><button class="on" data-p="alla">全A</button><button data-p="industry">行业</button><button data-p="style">风格</button><button id="todoTab" class="todo-restricted" data-p="todo" hidden>To-do</button></nav><main><section class="block" id="policyActivityOverview"><h2>全部政策｜每日新闻与措施</h2><p class="muted">统计进入全A、行业或风格任一路线的全部政策。已覆盖日期内无记录记0；尚未更新的日期留白。本版只显示原始每日数量，不做移动平均。</p><div class="grid"><div><b>每日全部政策新闻数</b><div class="muted"><span style="color:#245fe8">■</span> 每日数量</div><div class="chart compact"><canvas id="news"></canvas><i class="tip"></i></div></div><div><b>每日全部政策措施数</b><div class="muted"><span style="color:#13a078">■</span> 每日数量</div><div class="chart compact"><canvas id="measure"></canvas><i class="tip"></i></div></div></div></section><section class="panel on" id="alla"><section class="block">
 <h2>全A｜政策信号与市场指数对照</h2>
 <ol class="industry-reading-guide">
-  <li><b>读图对象：</b>彩色柱是本项目从政策新闻提取的全A八渠道日强度；曲线是 ZZVD 指数日收益复利计算的市场累计收益率。放在同一时间轴仅供观察，不代表因果或回测结果。</li>
+  <li><b>读图对象：</b>彩色柱是本项目从政策新闻提取的全A八渠道日强度；曲线是核准的指数日收益率复利计算的市场累计收益率。放在同一时间轴仅供观察，不代表因果或回测结果。</li>
   <li><b>左轴＝政策信号分数：</b>各渠道当日有方向强度叠加，0 线上方为支持、下方为压制；不跨日累计、不做平滑。</li>
   <li><b>右轴＝市场累计收益率（%）：</b>指数以各自 2021 年首个交易日固定归零；拖动区间不重新设基准。<span id="marketBaseNote"></span></li>
   <li><b>日期与缺失：</b>横轴为自然日。行情只在交易日有真实观测，休市段用相邻收盘点连线展示，悬浮提示不会把插值当作观测。政策覆盖结束后留白，不记作 0。</li>
@@ -28,7 +28,7 @@
 <div class="industry-control-group"><b>市场指数（右轴；可多选）</b><div class="index-picker" id="indexPicker" aria-label="选择市场指数"></div><p class="muted" id="indexAvailability"></p></div>
 <div class="industry-control-group"><b>政策渠道（左轴；可多选）</b><div class="checks" id="chs"></div></div>
 <div class="chart industry-joint-chart"><canvas id="allaChart" aria-label="全A政策信号与市场指数累计收益率双轴图"></canvas><i class="tip"></i></div>
-<p class="muted">历史数据说明：ZZVD 中证全指日收益从 2005-01-04 起已有记录；当前多指数对照图统一从各指数 2021 年首个交易日作为固定 0% 基准，并非数据库只含 2021 年后的数据。本图显示的是复利收益率，不是官方指数点位。</p>
+<p class="muted">历史数据说明：多指数对照图统一从各指数 2021 年首个交易日作为固定 0% 基准；本次收盘行情先入 FQuant，再从数据库读取。本图显示的是复利收益率，不是官方指数点位。</p>
 </section><section class="block" id="evidenceBlock"><div class="ehead"><div><h2>所选日期｜全A政策证据树</h2><p class="muted" id="evidenceStatus">点击上方任意日期柱查看。方向独立标注；强度、覆盖、确定、持续、增量和把握度均为非负的影响幅度。</p></div><input type="date" id="evidenceDay"></div><div class="evidence" id="evidenceTree"><div class="loading">请点击上方柱形选择日期</div></div></section></section><section class="panel" id="industry">
 <section class="block"><h2>行业｜每日政策活动</h2><p class="muted">只统计至少有一条行业路线评分的政策新闻与措施；同一新闻或措施影响多个行业时，当天只计一次。已覆盖日期内无记录记0；尚未更新的日期留白。本版只显示原始每日数量。</p><div class="grid"><div><b>每日行业相关政策数</b><div class="muted"><span style="color:#245fe8">■</span> 每日数量</div><div class="chart compact"><canvas id="industryNews"></canvas><i class="tip"></i></div></div><div><b>每日行业相关措施数</b><div class="muted"><span style="color:#13a078">■</span> 每日数量</div><div class="chart compact"><canvas id="industryMeasure"></canvas><i class="tip"></i></div></div></div></section>
 <section class="block" id="industryDetail">
